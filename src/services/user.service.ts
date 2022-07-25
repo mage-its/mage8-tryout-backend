@@ -7,8 +7,8 @@ import { QueryOption } from '../models/plugins/paginate.plugin';
 import ApiError from '../utils/ApiError';
 
 const createUser = async (userBody: UserInterface) => {
-  if (await User.isEmailTaken(userBody.email)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  if (await User.isUsernameTaken(userBody.username)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Username already taken');
   }
   return User.create(userBody);
 };
@@ -37,8 +37,11 @@ const updateUserById = async (
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  if (
+    updateBody.username &&
+    (await User.isUsernameTaken(updateBody.username, userId))
+  ) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Username already taken');
   }
   Object.assign(user, updateBody);
   await user.save();

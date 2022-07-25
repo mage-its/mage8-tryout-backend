@@ -5,8 +5,7 @@ export enum Role {
 
 export interface UserInterface {
   id: string;
-  name: string;
-  email: string;
+  username: string;
   password: string;
   role?: Role;
   isEmailVerified: boolean;

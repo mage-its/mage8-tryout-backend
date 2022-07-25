@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import bcrypt from 'bcryptjs';
 import { FilterQuery, Model, model, Schema } from 'mongoose';
-import validator from 'validator';
 
 import { roles } from '../config/roles';
 import UserInterface from '../interfaces/user.interface';
@@ -13,7 +12,7 @@ export interface UserMethods {
 }
 
 export interface UserModel extends Model<UserInterface, unknown, UserMethods> {
-  isEmailTaken(email: string, excludeUserId?: string): Promise<boolean>;
+  isUsernameTaken(email: string, excludeUserId?: string): Promise<boolean>;
   paginate: (
     filter: FilterQuery<unknown>,
     options: QueryOption
@@ -23,22 +22,10 @@ export interface UserModel extends Model<UserInterface, unknown, UserMethods> {
 
 const userSchema = new Schema<UserInterface, UserModel, UserMethods>(
   {
-    name: {
+    username: {
       type: String,
       required: true,
       trim: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      lowercase: true,
-      validate(value: string) {
-        if (!validator.isEmail(value)) {
-          throw new Error('Invalid email');
-        }
-      },
     },
     password: {
       type: String,
@@ -73,11 +60,11 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethods>(
 userSchema.plugin(toJSON as (schema: Schema) => void);
 userSchema.plugin(paginate);
 
-userSchema.statics.isEmailTaken = async function (
-  email: string,
+userSchema.statics.isUsernameTaken = async function (
+  username: string,
   excludeUserId?: string
 ) {
-  const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+  const user = await this.findOne({ username, _id: { $ne: excludeUserId } });
   return !!user;
 };
 

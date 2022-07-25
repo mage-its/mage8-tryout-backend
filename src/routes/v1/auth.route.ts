@@ -1,7 +1,6 @@
 import express from 'express';
 
 import authController from '../../controllers/auth.controller';
-import auth from '../../middlewares/auth';
 import validate from '../../middlewares/validate';
 import authValidation from '../../validations/auth.validation';
 
@@ -28,11 +27,6 @@ router.post(
   '/reset-password',
   validate(authValidation.resetPassword),
   authController.resetPassword
-);
-router.post(
-  '/send-verification-email',
-  auth(),
-  authController.sendVerificationEmail
 );
 router.post(
   '/verify-email',

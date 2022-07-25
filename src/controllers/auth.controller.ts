@@ -1,6 +1,5 @@
 import httpStatus from 'http-status';
 
-import UserInterface from '../interfaces/user.interface';
 import {
   authService,
   emailService,
@@ -45,17 +44,6 @@ const resetPassword = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-const sendVerificationEmail = catchAsync(async (req, res) => {
-  const verifyEmailToken = await tokenService.generateVerifyEmailToken(
-    req.user as UserInterface
-  );
-  await emailService.sendVerificationEmail(
-    (req.user as UserInterface).email,
-    verifyEmailToken
-  );
-  res.status(httpStatus.NO_CONTENT).send();
-});
-
 const verifyEmail = catchAsync(async (req, res) => {
   await authService.verifyEmail(req.query.token as string);
   res.status(httpStatus.NO_CONTENT).send();
@@ -68,7 +56,6 @@ const authController = {
   refreshTokens,
   forgotPassword,
   resetPassword,
-  sendVerificationEmail,
   verifyEmail,
 };
 
