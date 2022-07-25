@@ -12,7 +12,7 @@ export interface UserMethods {
 }
 
 export interface UserModel extends Model<UserInterface, unknown, UserMethods> {
-  isUsernameTaken(email: string, excludeUserId?: string): Promise<boolean>;
+  isUsernameTaken(username: string, excludeUserId?: string): Promise<boolean>;
   paginate: (
     filter: FilterQuery<unknown>,
     options: QueryOption
@@ -26,6 +26,7 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethods>(
       type: String,
       required: true,
       trim: true,
+      unique: true,
     },
     password: {
       type: String,

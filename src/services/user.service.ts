@@ -25,6 +25,10 @@ const getUserById = async (id: string) => {
   return User.findById(id);
 };
 
+const getUserByUsername = async (username: string) => {
+  return User.findOne({ username });
+};
+
 const getUserByEmail = async (email: string) => {
   return User.findOne({ email });
 };
@@ -61,6 +65,7 @@ const userService = {
   createUser,
   queryUsers,
   getUserById,
+  getUserByUsername,
   getUserByEmail,
   updateUserById,
   deleteUserById,

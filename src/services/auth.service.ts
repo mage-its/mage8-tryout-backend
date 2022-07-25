@@ -6,6 +6,20 @@ import ApiError from '../utils/ApiError';
 import tokenService from './token.service';
 import userService from './user.service';
 
+const loginUserWithUsernameAndPassword = async (
+  username: string,
+  password: string
+) => {
+  const user = await userService.getUserByUsername(username);
+  if (!user || !(await user.isPasswordMatch(password))) {
+    throw new ApiError(
+      httpStatus.UNAUTHORIZED,
+      'Incorrect username or password'
+    );
+  }
+  return user;
+};
+
 const loginUserWithEmailAndPassword = async (
   email: string,
   password: string
@@ -90,6 +104,7 @@ const verifyEmail = async (verifyEmailToken: string) => {
 };
 
 const authService = {
+  loginUserWithUsernameAndPassword,
   loginUserWithEmailAndPassword,
   logout,
   refreshAuth,
