@@ -5,6 +5,7 @@ import mongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
 import httpStatus from 'http-status';
 import passport from 'passport';
+import path from 'path';
 
 import config from './config/config';
 import morgan from './config/morgan';
@@ -39,6 +40,8 @@ app.use(compression());
 // enable cors
 app.use(cors());
 app.options('*', cors() as RequestHandler);
+
+app.use('/static', express.static(path.join(__dirname, '../public')));
 
 // jwt authentication
 app.use(passport.initialize());

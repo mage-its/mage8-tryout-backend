@@ -44,11 +44,6 @@ const resetPassword = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-const verifyEmail = catchAsync(async (req, res) => {
-  await authService.verifyEmail(req.query.token as string);
-  res.status(httpStatus.NO_CONTENT).send();
-});
-
 const authController = {
   register,
   login,
@@ -56,7 +51,6 @@ const authController = {
   refreshTokens,
   forgotPassword,
   resetPassword,
-  verifyEmail,
 };
 
 export default authController;

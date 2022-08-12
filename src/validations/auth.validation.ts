@@ -43,12 +43,6 @@ const resetPassword = {
   }),
 };
 
-const verifyEmail = {
-  query: Joi.object().keys({
-    token: Joi.string().required(),
-  }),
-};
-
 const authValidation = {
   register,
   login,
@@ -56,7 +50,6 @@ const authValidation = {
   refreshTokens,
   forgotPassword,
   resetPassword,
-  verifyEmail,
 };
 
 export default authValidation;

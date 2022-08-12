@@ -8,7 +8,7 @@ export interface UserInterface {
   username: string;
   password: string;
   role?: Role;
-  isEmailVerified: boolean;
+  score?: number;
   updatedAt: Date;
   createdAt: Date;
 }

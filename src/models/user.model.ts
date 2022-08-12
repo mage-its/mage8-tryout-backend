@@ -47,10 +47,6 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethods>(
       enum: roles,
       default: 'user',
     },
-    isEmailVerified: {
-      type: Boolean,
-      default: false,
-    },
   },
   {
     timestamps: true,

@@ -28,11 +28,6 @@ router.post(
   validate(authValidation.resetPassword),
   authController.resetPassword
 );
-router.post(
-  '/verify-email',
-  validate(authValidation.verifyEmail),
-  authController.verifyEmail
-);
 
 export default router;
 
