@@ -1,4 +1,4 @@
-import { model, Schema, SchemaTypes } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
 import SoalInterface, {
   Difficulty,
@@ -13,7 +13,7 @@ const soalSchema = new Schema(
       required: true,
     },
     multipleChoice: {
-      type: [String],
+      type: [Schema.Types.ObjectId],
     },
     difficulty: {
       type: Number,
@@ -25,10 +25,18 @@ const soalSchema = new Schema(
         Difficulty.HOTS,
       ],
     },
-    user: {
-      type: SchemaTypes.ObjectId,
-      ref: 'User',
+    school: {
+      type: String,
       required: true,
+    },
+    answer: {
+      type: String,
+      required: true,
+    },
+    round: {
+      type: Number,
+      required: true,
+      default: 1,
     },
     type: {
       type: Number,

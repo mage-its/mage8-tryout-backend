@@ -42,6 +42,24 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethods>(
       },
       private: true, // used by the toJSON plugin
     },
+    team: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'Team',
+    },
+    school: {
+      type: String,
+      enum: ['SMA', 'SMK'],
+      required: true,
+    },
+    score: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    answers: {
+      type: [Schema.Types.Mixed],
+    },
     role: {
       type: String,
       enum: roles,

@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export enum Difficulty {
   MUDAH,
   SEDANG,
@@ -12,6 +14,7 @@ export enum TipeSoal {
 }
 
 export interface SoalInterface {
+  id: Types.ObjectId;
   question: string;
   multipleChoice?: string[];
   type: TipeSoal;
