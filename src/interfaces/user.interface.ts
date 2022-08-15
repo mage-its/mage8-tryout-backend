@@ -6,7 +6,7 @@ export enum Role {
 }
 
 export interface UserInterface {
-  id: Types.ObjectId;
+  id: string;
   username: string;
   password: string;
   team: Types.ObjectId;

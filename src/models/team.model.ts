@@ -8,6 +8,7 @@ const teamSchema = new Schema(
     members: {
       type: [Schema.Types.ObjectId],
       required: true,
+      default: [],
     },
     name: {
       type: String,

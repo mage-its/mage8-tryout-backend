@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import bcrypt from 'bcryptjs';
-import { FilterQuery, Model, model, Schema } from 'mongoose';
+import mongoose, { FilterQuery, Model, model, Schema } from 'mongoose';
 
 import { roles } from '../config/roles';
 import UserInterface from '../interfaces/user.interface';
@@ -33,24 +33,22 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethods>(
       required: true,
       trim: true,
       minlength: 8,
-      validate(value: string) {
-        if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-          throw new Error(
-            'Password must contain at least one letter and one number'
-          );
-        }
-      },
+      // validate(value: string) {
+      //   if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+      //     throw new Error(
+      //       'Password must contain at least one letter and one number'
+      //     );
+      //   }
+      // },
       private: true, // used by the toJSON plugin
     },
     team: {
       type: Schema.Types.ObjectId,
-      required: true,
       ref: 'Team',
     },
     school: {
       type: String,
       enum: ['SMA', 'SMK'],
-      required: true,
     },
     score: {
       type: Number,
@@ -79,7 +77,10 @@ userSchema.statics.isUsernameTaken = async function (
   username: string,
   excludeUserId?: string
 ) {
-  const user = await this.findOne({ username, _id: { $ne: excludeUserId } });
+  const user = await this.findOne({
+    username,
+    _id: mongoose.trusted({ $ne: excludeUserId }),
+  });
   return !!user;
 };
 
