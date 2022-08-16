@@ -5,7 +5,7 @@ import { toJSON } from './plugins';
 
 const teamSchema = new Schema(
   {
-    members: {
+    membersId: {
       type: [Schema.Types.ObjectId],
       required: true,
       default: [],
@@ -13,6 +13,8 @@ const teamSchema = new Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
+      unique: true,
     },
     phone: {
       type: String,

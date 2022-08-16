@@ -10,8 +10,14 @@ const register = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send({ team, users });
 });
 
+const getTeamByName = catchAsync(async (req, res) => {
+  const team = await teamService.getTeamByName(req.query.name as string);
+  res.send({ team });
+});
+
 const teamController = {
   register,
+  getTeamByName,
 };
 
 export default teamController;

@@ -25,8 +25,15 @@ const register = {
   }),
 };
 
+const getTeamByName = {
+  query: Joi.object().keys({
+    name: Joi.string().required(),
+  }),
+};
+
 const teamValidation = {
   register,
+  getTeamByName,
 };
 
 export default teamValidation;

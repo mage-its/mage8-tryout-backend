@@ -14,4 +14,11 @@ router.post(
   teamController.register
 );
 
+router.get(
+  '/',
+  auth('manageUsers'),
+  validate(teamValidation.getTeamByName),
+  teamController.getTeamByName
+);
+
 export default router;
