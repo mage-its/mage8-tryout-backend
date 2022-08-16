@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-import { password } from './custom.validation';
+import { objectId, password } from './custom.validation';
 
 const register = {
   body: Joi.object().keys({
@@ -31,6 +31,12 @@ const getTeamByName = {
   }),
 };
 
+const getTeamById = {
+  params: Joi.object().keys({
+    teamId: Joi.string().custom(objectId),
+  }),
+};
+
 const getTeams = {
   query: Joi.object().keys({
     name: Joi.string(),
@@ -44,6 +50,7 @@ const getTeams = {
 const teamValidation = {
   register,
   getTeamByName,
+  getTeamById,
   getTeams,
 };
 

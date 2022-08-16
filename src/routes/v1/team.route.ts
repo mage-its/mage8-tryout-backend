@@ -15,17 +15,25 @@ router.post(
 );
 
 router.get(
+  '/',
+  auth('manageUsers'),
+  validate(teamValidation.getTeamByName),
+  teamController.getTeamByName
+);
+
+router.get(
   '/all',
   auth('manageUsers'),
   validate(teamValidation.getTeams),
   teamController.getTeams
 );
 
-router.get(
-  '/',
-  auth('manageUsers'),
-  validate(teamValidation.getTeamByName),
-  teamController.getTeamByName
-);
+router
+  .route('/:teamId')
+  .get(
+    auth('getUsers'),
+    validate(teamValidation.getTeamById),
+    teamController.getTeamById
+  );
 
 export default router;

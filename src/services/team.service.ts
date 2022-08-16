@@ -1,4 +1,4 @@
-import { FilterQuery } from 'mongoose';
+import mongoose, { FilterQuery } from 'mongoose';
 
 import TeamInterface from '../interfaces/team.interface';
 import UserInterface from '../interfaces/user.interface';
@@ -47,6 +47,34 @@ const getTeamByName = async (name: string) => {
   return team;
 };
 
+const getTeamById = async (id: string) => {
+  const _id = new mongoose.Types.ObjectId(id);
+  const aggregateQuery = [
+    {
+      $match: {
+        _id,
+      },
+    },
+    {
+      $lookup: {
+        from: User.collection.collectionName,
+        localField: '_id',
+        foreignField: 'team',
+        as: 'members',
+      },
+    },
+    {
+      $unset: 'members.password',
+    },
+  ];
+
+  const team = await Team.aggregate<
+    TeamInterface & { members: UserInterface[] }
+  >(aggregateQuery);
+
+  return team;
+};
+
 const queryTeams = async (
   filter: FilterQuery<unknown>,
   options: QueryOption
@@ -58,6 +86,7 @@ const queryTeams = async (
 const teamService = {
   createTeam,
   getTeamByName,
+  getTeamById,
   queryTeams,
 };
 

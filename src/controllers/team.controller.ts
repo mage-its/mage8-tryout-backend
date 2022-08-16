@@ -17,6 +17,11 @@ const getTeamByName = catchAsync(async (req, res) => {
   res.send({ team });
 });
 
+const getTeamById = catchAsync(async (req, res) => {
+  const team = await teamService.getTeamById(req.params.teamId as string);
+  res.send({ team });
+});
+
 const getTeams = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name', 'school']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']) as QueryOption;
@@ -27,6 +32,7 @@ const getTeams = catchAsync(async (req, res) => {
 const teamController = {
   register,
   getTeamByName,
+  getTeamById,
   getTeams,
 };
 

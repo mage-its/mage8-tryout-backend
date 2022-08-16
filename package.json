@@ -18,6 +18,7 @@
     "prepare": "husky install",
     "prettier": "prettier --check **/*.js",
     "prettier:fix": "prettier --write **/*.js",
+    "purge:token": "ts-node ./src/scripts/clearTokens.ts",
     "start": "pm2 start ecosystem.config.json --no-daemon",
     "start:node": "node ./dist/index.js",
     "start:ts": "ts-node ./src/index.ts",
