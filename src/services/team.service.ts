@@ -8,8 +8,8 @@ const createTeam = async (
   userBodies: UserInterface[]
 ) => {
   const team = await Team.create(teamBody);
-  const users = await User.create(
-    ...userBodies.map((userBody) => ({ ...userBody, team: team.id }))
+  const users = await User.insertMany(
+    userBodies.map((userBody) => ({ ...userBody, team: team.id }))
   );
   Object.assign(team, { members: users.map((user) => user.id) });
   team.save();
