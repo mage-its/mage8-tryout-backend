@@ -29,11 +29,23 @@ const getTeams = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const updateTeam = catchAsync(async (req, res) => {
+  const team = await teamService.updateTeamById(req.params.teamId, req.body);
+  res.send(team);
+});
+
+const deleteTeam = catchAsync(async (req, res) => {
+  await teamService.deleteTeamById(req.params.teamId);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
 const teamController = {
   register,
   getTeamByName,
   getTeamById,
   getTeams,
+  updateTeam,
+  deleteTeam,
 };
 
 export default teamController;

@@ -34,6 +34,16 @@ router
     auth('getUsers'),
     validate(teamValidation.getTeamById),
     teamController.getTeamById
+  )
+  .patch(
+    auth('manageUsers'),
+    validate(teamValidation.updateTeam),
+    teamController.updateTeam
+  )
+  .delete(
+    auth('manageUsers'),
+    validate(teamValidation.deleteTeam),
+    teamController.deleteTeam
   );
 
 export default router;

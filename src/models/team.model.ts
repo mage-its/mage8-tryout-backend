@@ -1,10 +1,11 @@
-import { FilterQuery, Model, model, Schema } from 'mongoose';
+import mongoose, { FilterQuery, Model, model, Schema } from 'mongoose';
 
 import TeamInterface from '../interfaces/team.interface';
 import { paginate, toJSON } from './plugins';
 import { QueryOption } from './plugins/paginate.plugin';
 
 export interface TeamModel extends Model<TeamInterface, unknown> {
+  isTeamnameTaken(name: string, excludeTeamId?: string): Promise<boolean>;
   paginate: (
     filter: FilterQuery<unknown>,
     options: QueryOption
@@ -51,6 +52,17 @@ const teamSchema = new Schema<TeamInterface, TeamModel>(
 // add plugin that converts mongoose to json
 teamSchema.plugin(toJSON as (schema: Schema) => void);
 teamSchema.plugin(paginate);
+
+teamSchema.statics.isTeamnameTaken = async function (
+  name: string,
+  excludeTeamId?: string
+) {
+  const team = await this.findOne({
+    name,
+    _id: mongoose.trusted({ $ne: excludeTeamId }),
+  });
+  return !!team;
+};
 
 const Team = model<TeamInterface, TeamModel>('Team', teamSchema);
 

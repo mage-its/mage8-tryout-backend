@@ -47,11 +47,33 @@ const getTeams = {
   }),
 };
 
+const updateTeam = {
+  params: Joi.object().keys({
+    teamId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object()
+    .keys({
+      name: Joi.string(),
+      phone: Joi.string(),
+      school: Joi.string(),
+      email: Joi.string(),
+    })
+    .min(1),
+};
+
+const deleteTeam = {
+  params: Joi.object().keys({
+    teamId: Joi.string().custom(objectId),
+  }),
+};
+
 const teamValidation = {
   register,
   getTeamByName,
   getTeamById,
   getTeams,
+  updateTeam,
+  deleteTeam,
 };
 
 export default teamValidation;

@@ -1,22 +1,22 @@
+import httpStatus from 'http-status';
 import mongoose, { FilterQuery } from 'mongoose';
 
 import TeamInterface from '../interfaces/team.interface';
-import UserInterface from '../interfaces/user.interface';
-import { User } from '../models';
+import { Team } from '../models';
 import { QueryOption } from '../models/plugins/paginate.plugin';
-import Team from '../models/team.model';
+import ApiError from '../utils/ApiError';
 
 const createTeam = async (
   teamBody: TeamInterface,
-  userBodies: UserInterface[]
+  teamBodies: TeamInterface[]
 ) => {
   const team = await Team.create(teamBody);
-  const users = await User.insertMany(
-    userBodies.map((userBody) => ({ ...userBody, team: team.id }))
+  const teams = await Team.insertMany(
+    teamBodies.map((teamBody) => ({ ...teamBody, team: team.id }))
   );
-  Object.assign(team, { membersId: users.map((user) => user.id) });
+  Object.assign(team, { membersId: teams.map((team) => team.id) });
   team.save();
-  return [team, users];
+  return [team, teams];
 };
 
 const getTeamByName = async (name: string) => {
@@ -29,7 +29,7 @@ const getTeamByName = async (name: string) => {
     },
     {
       $lookup: {
-        from: User.collection.collectionName,
+        from: Team.collection.collectionName,
         localField: '_id',
         foreignField: 'team',
         as: 'members',
@@ -41,7 +41,7 @@ const getTeamByName = async (name: string) => {
   ];
 
   const team = await Team.aggregate<
-    TeamInterface & { members: UserInterface[] }
+    TeamInterface & { members: TeamInterface[] }
   >(aggregateQuery);
 
   return team;
@@ -57,7 +57,7 @@ const getTeamById = async (id: string) => {
     },
     {
       $lookup: {
-        from: User.collection.collectionName,
+        from: Team.collection.collectionName,
         localField: '_id',
         foreignField: 'team',
         as: 'members',
@@ -69,7 +69,7 @@ const getTeamById = async (id: string) => {
   ];
 
   const team = await Team.aggregate<
-    TeamInterface & { members: UserInterface[] }
+    TeamInterface & { members: TeamInterface[] }
   >(aggregateQuery);
 
   return team;
@@ -83,11 +83,41 @@ const queryTeams = async (
   return teams;
 };
 
+const updateTeamById = async (
+  teamId: string,
+  updateBody: Partial<TeamInterface>
+) => {
+  const team = await Team.findById(teamId);
+  if (!team) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Team not found');
+  }
+  if (
+    updateBody.name &&
+    (await Team.isTeamnameTaken(updateBody.name, teamId))
+  ) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Team name already taken');
+  }
+  Object.assign(team, updateBody);
+  await team.save();
+  return team;
+};
+
+const deleteTeamById = async (teamId: string) => {
+  const team = await Team.findById(teamId);
+  if (!team) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Team not found');
+  }
+  await team.remove();
+  return team;
+};
+
 const teamService = {
   createTeam,
   getTeamByName,
   getTeamById,
   queryTeams,
+  updateTeamById,
+  deleteTeamById,
 };
 
 export default teamService;
