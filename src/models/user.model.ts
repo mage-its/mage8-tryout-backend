@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-this-alias */
 import bcrypt from 'bcryptjs';
 import mongoose, { FilterQuery, Model, model, Schema } from 'mongoose';
@@ -96,6 +97,33 @@ userSchema.pre('save', async function (next) {
   }
   next();
 });
+
+userSchema.pre(
+  'insertMany',
+  async function (
+    next: mongoose.CallbackWithoutResultAndOptionalError,
+    docs: Array<
+      mongoose.Document<unknown, any, UserInterface> &
+        UserInterface & {
+          _id: mongoose.Types.ObjectId;
+        } & UserMethods
+    >
+  ) {
+    const users = docs;
+    if (Array.isArray(users) && users.length) {
+      const hashedUsers = await Promise.all(
+        users.map(async (user) => {
+          user.password = await bcrypt.hash(user.password, 8);
+          return user;
+        })
+      );
+      docs = hashedUsers;
+      next();
+    } else {
+      return next(new Error('User list should not be empty')); // lookup early return pattern
+    }
+  }
+);
 
 const User = model<UserInterface, UserModel>('User', userSchema);
 

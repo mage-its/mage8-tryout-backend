@@ -15,6 +15,13 @@ router.post(
 );
 
 router.get(
+  '/all',
+  auth('manageUsers'),
+  validate(teamValidation.getTeams),
+  teamController.getTeams
+);
+
+router.get(
   '/',
   auth('manageUsers'),
   validate(teamValidation.getTeamByName),

@@ -1,9 +1,18 @@
-import { model, Schema } from 'mongoose';
+import { FilterQuery, Model, model, Schema } from 'mongoose';
 
 import TeamInterface from '../interfaces/team.interface';
-import { toJSON } from './plugins';
+import { paginate, toJSON } from './plugins';
+import { QueryOption } from './plugins/paginate.plugin';
 
-const teamSchema = new Schema(
+export interface TeamModel extends Model<TeamInterface, unknown> {
+  paginate: (
+    filter: FilterQuery<unknown>,
+    options: QueryOption
+  ) => Promise<void>;
+  toJSON: (schema: Schema) => void;
+}
+
+const teamSchema = new Schema<TeamInterface, TeamModel>(
   {
     membersId: {
       type: [Schema.Types.ObjectId],
@@ -41,7 +50,8 @@ const teamSchema = new Schema(
 
 // add plugin that converts mongoose to json
 teamSchema.plugin(toJSON as (schema: Schema) => void);
+teamSchema.plugin(paginate);
 
-const Team = model<TeamInterface>('Team', teamSchema);
+const Team = model<TeamInterface, TeamModel>('Team', teamSchema);
 
 export default Team;

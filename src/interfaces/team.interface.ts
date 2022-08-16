@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 
 export interface TeamInterface {
-  members: Types.ObjectId[];
+  membersId: Types.ObjectId[];
   name: string;
   phone: string;
   school: string;

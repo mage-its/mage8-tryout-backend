@@ -1,6 +1,9 @@
+import { FilterQuery } from 'mongoose';
+
 import TeamInterface from '../interfaces/team.interface';
 import UserInterface from '../interfaces/user.interface';
 import { User } from '../models';
+import { QueryOption } from '../models/plugins/paginate.plugin';
 import Team from '../models/team.model';
 
 const createTeam = async (
@@ -21,6 +24,7 @@ const getTeamByName = async (name: string) => {
     {
       $match: {
         name,
+        'membersId.0': { $exists: true },
       },
     },
     {
@@ -31,6 +35,9 @@ const getTeamByName = async (name: string) => {
         as: 'members',
       },
     },
+    {
+      $unset: 'members.password',
+    },
   ];
 
   const team = await Team.aggregate<
@@ -40,9 +47,18 @@ const getTeamByName = async (name: string) => {
   return team;
 };
 
+const queryTeams = async (
+  filter: FilterQuery<unknown>,
+  options: QueryOption
+) => {
+  const teams = await Team.paginate(filter, options);
+  return teams;
+};
+
 const teamService = {
   createTeam,
   getTeamByName,
+  queryTeams,
 };
 
 export default teamService;

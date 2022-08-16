@@ -31,9 +31,20 @@ const getTeamByName = {
   }),
 };
 
+const getTeams = {
+  query: Joi.object().keys({
+    name: Joi.string(),
+    school: Joi.string(),
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 const teamValidation = {
   register,
   getTeamByName,
+  getTeams,
 };
 
 export default teamValidation;
