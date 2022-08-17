@@ -21,6 +21,11 @@ router
   );
 
 router
+  .route('/peserta')
+  .get(auth(), soalController.getSoalsPeserta)
+  .post(auth(), validate(soalValidation.userAnswer), soalController.userAnswer);
+
+router
   .route('/:soalId')
   .get(
     auth('getSoals'),

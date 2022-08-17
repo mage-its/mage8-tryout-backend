@@ -1,8 +1,13 @@
 import { Types } from 'mongoose';
 
 export enum Role {
-  ADMIN = 'admin',
-  USER = 'user,',
+  admin = 'admin',
+  user = 'user',
+}
+
+enum School {
+  SMA,
+  SMK,
 }
 
 export interface UserInterface {
@@ -10,9 +15,9 @@ export interface UserInterface {
   username: string;
   password: string;
   team: Types.ObjectId;
-  role?: Role;
-  school: 'SMA' | 'SMK';
-  score?: number;
+  role?: keyof typeof Role;
+  school: keyof typeof School;
+  score: number;
   answers?: { id: Types.ObjectId; answer: string }[];
   updatedAt: Date;
   createdAt: Date;

@@ -22,10 +22,10 @@ const soalSchema = new Schema<SoalInterface, SoalModel>(
       required: true,
     },
     multipleChoice: {
-      type: [Schema.Types.ObjectId],
+      type: [String],
     },
     difficulty: {
-      type: Number,
+      type: String,
       required: true,
       enum: [
         Difficulty.MUDAH,
@@ -48,7 +48,7 @@ const soalSchema = new Schema<SoalInterface, SoalModel>(
       default: 1,
     },
     type: {
-      type: Number,
+      type: String,
       enum: [TipeSoal.PILGAN, TipeSoal.ESAI_SINGKAT, TipeSoal.ESAI_SINGKAT],
       required: true,
     },

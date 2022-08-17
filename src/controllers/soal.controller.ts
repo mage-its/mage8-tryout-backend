@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 
+import UserInterface from '../interfaces/user.interface';
 import { QueryOption } from '../models/plugins/paginate.plugin';
 import { soalService } from '../services';
 import ApiError from '../utils/ApiError';
@@ -8,6 +10,15 @@ import pick from '../utils/pick';
 
 const createSoal = catchAsync(async (req, res) => {
   const soal = await soalService.createSoal(req.body);
+  res.status(httpStatus.CREATED).send(soal);
+});
+
+const userAnswer = catchAsync(async (req, res) => {
+  const soal = await soalService.userAnswer(
+    req.user as any,
+    req.body.soalId,
+    req.body.answer
+  );
   res.status(httpStatus.CREATED).send(soal);
 });
 
@@ -26,6 +37,11 @@ const getSoal = catchAsync(async (req, res) => {
   res.send(soal);
 });
 
+const getSoalsPeserta = catchAsync(async (req, res) => {
+  const soals = await soalService.userGetSoal(req.user as UserInterface);
+  res.send(soals);
+});
+
 const updateSoal = catchAsync(async (req, res) => {
   const soal = await soalService.updateSoalById(req.params.soalId, req.body);
   res.send(soal);
@@ -38,8 +54,10 @@ const deleteSoal = catchAsync(async (req, res) => {
 
 const soalController = {
   createSoal,
+  userAnswer,
   getSoals,
   getSoal,
+  getSoalsPeserta,
   updateSoal,
   deleteSoal,
 };

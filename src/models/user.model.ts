@@ -50,6 +50,7 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethods>(
     school: {
       type: String,
       enum: ['SMA', 'SMK'],
+      required: true,
     },
     score: {
       type: Number,

@@ -6,19 +6,26 @@ const createSoal = {
   body: Joi.object().keys({
     question: Joi.string().required(),
     multipleChoice: Joi.array().items(Joi.string()),
-    type: Joi.number().required(),
-    difficulty: Joi.number().required(),
+    type: Joi.string().required(),
+    difficulty: Joi.string().required(),
     school: Joi.string().required(),
     round: Joi.number().required(),
     answer: Joi.string().required(),
   }),
 };
 
+const userAnswer = {
+  body: Joi.object().keys({
+    soalId: Joi.string().required(),
+    answer: Joi.string().required(),
+  }),
+};
+
 const getSoals = {
   query: Joi.object().keys({
-    type: Joi.number(),
+    type: Joi.string(),
     school: Joi.string(),
-    difficulty: Joi.number(),
+    difficulty: Joi.string(),
     round: Joi.number(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
@@ -40,8 +47,8 @@ const updateSoal = {
     .keys({
       question: Joi.string(),
       multipleChoice: Joi.array().items(Joi.string()),
-      type: Joi.number(),
-      difficulty: Joi.number(),
+      type: Joi.string(),
+      difficulty: Joi.string(),
       school: Joi.string(),
       round: Joi.number(),
       answer: Joi.string(),
@@ -57,6 +64,7 @@ const deleteSoal = {
 
 const soalValidation = {
   createSoal,
+  userAnswer,
   getSoals,
   getSoal,
   updateSoal,
