@@ -1,12 +1,21 @@
-import { model, Schema } from 'mongoose';
+import { FilterQuery, Model, model, Schema } from 'mongoose';
 
 import SoalInterface, {
   Difficulty,
   TipeSoal,
 } from '../interfaces/soal.interface';
-import { toJSON } from './plugins';
+import { paginate, toJSON } from './plugins';
+import { QueryOption } from './plugins/paginate.plugin';
 
-const soalSchema = new Schema(
+export interface SoalModel extends Model<SoalInterface, unknown> {
+  paginate: (
+    filter: FilterQuery<unknown>,
+    options: QueryOption
+  ) => Promise<void>;
+  toJSON: (schema: Schema) => void;
+}
+
+const soalSchema = new Schema<SoalInterface, SoalModel>(
   {
     question: {
       type: String,
@@ -51,7 +60,8 @@ const soalSchema = new Schema(
 
 // add plugin that converts mongoose to json
 soalSchema.plugin(toJSON as (schema: Schema) => void);
+soalSchema.plugin(paginate);
 
-const Soal = model<SoalInterface>('Soal', soalSchema);
+export const Soal = model<SoalInterface, SoalModel>('Soal', soalSchema);
 
 export default Soal;

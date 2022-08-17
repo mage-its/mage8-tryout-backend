@@ -27,6 +27,6 @@ const timeSchema = new Schema(
 // add plugin that converts mongoose to json
 timeSchema.plugin(toJSON as (schema: Schema) => void);
 
-const Time = model<TimeInterface>('Time', timeSchema);
+export const Time = model<TimeInterface>('Time', timeSchema);
 
 export default Time;

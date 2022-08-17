@@ -1,7 +1,4 @@
-import authVal from './auth.validation';
-import teamVal from './team.validation';
-import userVal from './user.validation';
-
-export const authValidation = authVal;
-export const userValidation = userVal;
-export const teamValidation = teamVal;
+export * as authValidation from './auth.validation';
+export * as soalValidation from './soal.validation';
+export * as teamValidation from './team.validation';
+export * as userValidation from './user.validation';

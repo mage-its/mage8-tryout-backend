@@ -6,7 +6,7 @@ import { Team } from '../models';
 import { QueryOption } from '../models/plugins/paginate.plugin';
 import ApiError from '../utils/ApiError';
 
-const createTeam = async (
+export const createTeam = async (
   teamBody: TeamInterface,
   teamBodies: TeamInterface[]
 ) => {
@@ -19,7 +19,7 @@ const createTeam = async (
   return [team, teams];
 };
 
-const getTeamByName = async (name: string) => {
+export const getTeamByName = async (name: string) => {
   const aggregateQuery = [
     {
       $match: {
@@ -47,7 +47,7 @@ const getTeamByName = async (name: string) => {
   return team;
 };
 
-const getTeamById = async (id: string) => {
+export const getTeamById = async (id: string) => {
   const _id = new mongoose.Types.ObjectId(id);
   const aggregateQuery = [
     {
@@ -75,7 +75,7 @@ const getTeamById = async (id: string) => {
   return team;
 };
 
-const queryTeams = async (
+export const queryTeams = async (
   filter: FilterQuery<unknown>,
   options: QueryOption
 ) => {
@@ -83,7 +83,7 @@ const queryTeams = async (
   return teams;
 };
 
-const updateTeamById = async (
+export const updateTeamById = async (
   teamId: string,
   updateBody: Partial<TeamInterface>
 ) => {
@@ -102,7 +102,7 @@ const updateTeamById = async (
   return team;
 };
 
-const deleteTeamById = async (teamId: string) => {
+export const deleteTeamById = async (teamId: string) => {
   const team = await Team.findById(teamId);
   if (!team) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Team not found');

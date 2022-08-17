@@ -3,6 +3,7 @@ import express from 'express';
 import config from '../../config/config';
 import authRoute from './auth.route';
 import docsRoute from './docs.route';
+import soalRoute from './soal.route';
 import teamRoute from './team.route';
 import userRoute from './user.route';
 
@@ -20,6 +21,10 @@ const defaultRoutes = [
   {
     path: '/team',
     route: teamRoute,
+  },
+  {
+    path: '/soal',
+    route: soalRoute,
   },
 ];
 

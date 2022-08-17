@@ -42,6 +42,6 @@ const tokenSchema = new Schema(
 // add plugin that converts mongoose to json
 tokenSchema.plugin(toJSON as (schema: Schema) => void);
 
-const Token = model<TokenInterface>('Token', tokenSchema);
+export const Token = model<TokenInterface>('Token', tokenSchema);
 
 export default Token;

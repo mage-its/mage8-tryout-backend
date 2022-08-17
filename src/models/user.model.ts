@@ -125,6 +125,6 @@ userSchema.pre(
   }
 );
 
-const User = model<UserInterface, UserModel>('User', userSchema);
+export const User = model<UserInterface, UserModel>('User', userSchema);
 
 export default User;

@@ -64,6 +64,6 @@ teamSchema.statics.isTeamnameTaken = async function (
   return !!team;
 };
 
-const Team = model<TeamInterface, TeamModel>('Team', teamSchema);
+export const Team = model<TeamInterface, TeamModel>('Team', teamSchema);
 
 export default Team;
