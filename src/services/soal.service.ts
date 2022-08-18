@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Chance } from 'chance';
 import httpStatus from 'http-status';
 import { Document, FilterQuery, Types } from 'mongoose';
 
@@ -54,7 +55,13 @@ export const userAnswer = async (
         (answer) => answer.id.toString() === soal?._id.toString()
       )?.answer;
       if (answer === userAns) {
-        return user;
+        const { _id, ...returnedUser } = {
+          ...(user.toObject() as Partial<typeof user>),
+        };
+        delete returnedUser.score;
+        delete returnedUser.password;
+        returnedUser.id = _id;
+        return returnedUser;
       }
       user.answers = user.answers.filter(
         ({ id }) => id.toString() !== soal?.id.toString()
@@ -110,7 +117,13 @@ export const userAnswer = async (
 
   user.answers?.push({ id: soal?.id, answer: answer });
   await user.save();
-  return user;
+  const { _id, ...returnedUser } = {
+    ...(user.toObject() as Partial<typeof user>),
+  };
+  delete returnedUser.score;
+  delete returnedUser.password;
+  returnedUser.id = _id;
+  return returnedUser;
 };
 
 export const userGetSoal = async (user: UserInterface) => {
@@ -127,19 +140,28 @@ export const userGetSoal = async (user: UserInterface) => {
         school: user.school,
       },
     },
+    {
+      $unset: 'answer',
+    },
   ];
 
   const soals = await Soal.aggregate<
     SoalInterface & { members: SoalInterface[] }
   >(aggregateQuery);
 
-  return soals.map((soal) => ({
-    ...soal,
-    answered:
-      user.answers?.some(
-        (answer) => answer.id.toString() === soal._id?.toString()
-      ) ?? false,
-  }));
+  const chance = new Chance(user.id);
+
+  const returnSoals: typeof soals = chance.shuffle(
+    soals.map((soal) => ({
+      ...soal,
+      answered:
+        user.answers?.some(
+          (answer) => answer.id.toString() === soal._id?.toString()
+        ) ?? false,
+    }))
+  );
+
+  return returnSoals;
 };
 
 export const deleteSoalById = async (soalId: string) => {
