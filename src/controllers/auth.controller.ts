@@ -1,5 +1,6 @@
 import httpStatus from 'http-status';
 
+import UserInterface from '../interfaces/user.interface';
 import {
   authService,
   emailService,
@@ -20,7 +21,7 @@ const login = catchAsync(async (req, res) => {
     username,
     password
   );
-  const tokens = await tokenService.generateAuthTokens(user);
+  const tokens = await tokenService.generateAuthTokens(user as UserInterface);
   res.send({ user, tokens });
 });
 

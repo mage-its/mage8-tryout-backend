@@ -17,7 +17,11 @@ export const loginUserWithUsernameAndPassword = async (
       'Incorrect username or password'
     );
   }
-  return user;
+  const returnedUser = {
+    ...(user.toObject() as Partial<typeof user>),
+  };
+  delete returnedUser.score;
+  return returnedUser;
 };
 
 export const loginUserWithEmailAndPassword = async (
@@ -28,7 +32,11 @@ export const loginUserWithEmailAndPassword = async (
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
-  return user;
+  const returnedUser = {
+    ...(user.toObject() as Partial<typeof user>),
+  };
+  delete returnedUser.score;
+  return returnedUser;
 };
 
 export const logout = async (refreshToken: string) => {
