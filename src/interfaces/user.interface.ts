@@ -19,6 +19,7 @@ export interface UserInterface {
   school: keyof typeof School;
   score: number;
   answers?: { id: Types.ObjectId; answer: string }[];
+  corrected?: boolean;
   updatedAt: Date;
   createdAt: Date;
 }

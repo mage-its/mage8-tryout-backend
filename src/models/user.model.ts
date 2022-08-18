@@ -43,6 +43,11 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethods>(
       // },
       private: true, // used by the toJSON plugin
     },
+    corrected: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
     team: {
       type: Schema.Types.ObjectId,
       ref: 'Team',

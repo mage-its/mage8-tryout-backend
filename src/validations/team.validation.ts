@@ -7,14 +7,17 @@ const register = {
     user1: Joi.object().keys({
       password: Joi.string().required().custom(password),
       username: Joi.string().required(),
+      school: Joi.string().required(),
     }),
     user2: Joi.object().keys({
       password: Joi.string().required().custom(password),
       username: Joi.string().required(),
+      school: Joi.string().required(),
     }),
     user3: Joi.object().keys({
       password: Joi.string().required().custom(password),
       username: Joi.string().required(),
+      school: Joi.string().required(),
     }),
     team: Joi.object().keys({
       name: Joi.string().required(),
