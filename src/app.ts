@@ -10,12 +10,15 @@ import path from 'path';
 import config from './config/config';
 import morgan from './config/morgan';
 import { jwtStrategy } from './config/passport';
+import { redis } from './config/redis';
 import { errorConverter, errorHandler } from './middlewares/error';
 import { authLimiter } from './middlewares/rateLimiter';
 import routes from './routes/v1';
 import ApiError from './utils/ApiError';
 
 const app = express();
+
+console.log(redis?.status);
 
 if (config.env !== 'test') {
   app.use(morgan.successHandler);

@@ -12,6 +12,7 @@ enum School {
 
 export interface UserInterface {
   id: string;
+  _id: string;
   username: string;
   password: string;
   team: Types.ObjectId;

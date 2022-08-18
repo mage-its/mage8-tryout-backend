@@ -3,6 +3,7 @@ import { Chance } from 'chance';
 import httpStatus from 'http-status';
 import { Document, FilterQuery, Types } from 'mongoose';
 
+import { redis } from '../config/redis';
 import SoalInterface from '../interfaces/soal.interface';
 import UserInterface from '../interfaces/user.interface';
 import { Soal } from '../models';
@@ -10,7 +11,11 @@ import { QueryOption } from '../models/plugins/paginate.plugin';
 import ApiError from '../utils/ApiError';
 
 export const createSoal = async (soalBody: SoalInterface) => {
-  return Soal.create(soalBody);
+  const soal = await Soal.create(soalBody);
+
+  redis?.del('SOAL');
+
+  return soal;
 };
 
 export const querySoals = async (
@@ -35,6 +40,7 @@ export const updateSoalById = async (
   }
   Object.assign(soal, updateBody);
   await soal.save();
+  redis?.del('SOAL');
   return soal;
 };
 
@@ -145,9 +151,20 @@ export const userGetSoal = async (user: UserInterface) => {
     },
   ];
 
-  const soals = await Soal.aggregate<
-    SoalInterface & { members: SoalInterface[] }
-  >(aggregateQuery);
+  const cachedSoal = await redis?.get('SOAL');
+
+  let soals: (SoalInterface & {
+    members: SoalInterface[];
+  })[];
+
+  if (cachedSoal) {
+    soals = JSON.parse(cachedSoal);
+  } else {
+    soals = await Soal.aggregate<SoalInterface & { members: SoalInterface[] }>(
+      aggregateQuery
+    );
+    redis?.set('SOAL', JSON.stringify(soals), 'EX', 60 * 60);
+  }
 
   const chance = new Chance(user.id);
 
@@ -170,6 +187,7 @@ export const deleteSoalById = async (soalId: string) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Soal not found');
   }
   await soal.remove();
+  redis?.del('SOAL');
   return soal;
 };
 

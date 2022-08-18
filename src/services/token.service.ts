@@ -61,7 +61,7 @@ export const generateAuthTokens = async (user: UserInterface) => {
     'minutes'
   );
   const accessToken = generateToken(
-    user.id,
+    user.id ?? user._id,
     accessTokenExpires,
     tokenTypes.ACCESS
   );
@@ -71,13 +71,13 @@ export const generateAuthTokens = async (user: UserInterface) => {
     'days'
   );
   const refreshToken = generateToken(
-    user.id,
+    user.id ?? user._id,
     refreshTokenExpires,
     tokenTypes.REFRESH
   );
   await saveToken(
     refreshToken,
-    user.id,
+    user.id ?? user._id,
     refreshTokenExpires,
     tokenTypes.REFRESH
   );
@@ -104,13 +104,13 @@ export const generateResetPasswordToken = async (email: string) => {
     'minutes'
   );
   const resetPasswordToken = generateToken(
-    user.id,
+    user.id ?? user._id,
     expires,
     tokenTypes.RESET_PASSWORD
   );
   await saveToken(
     resetPasswordToken,
-    user.id,
+    user.id ?? user._id,
     expires,
     tokenTypes.RESET_PASSWORD
   );
@@ -123,11 +123,16 @@ export const generateVerifyEmailToken = async (user: UserInterface) => {
     'minutes'
   );
   const verifyEmailToken = generateToken(
-    user.id,
+    user.id ?? user._id,
     expires,
     tokenTypes.VERIFY_EMAIL
   );
-  await saveToken(verifyEmailToken, user.id, expires, tokenTypes.VERIFY_EMAIL);
+  await saveToken(
+    verifyEmailToken,
+    user.id ?? user._id,
+    expires,
+    tokenTypes.VERIFY_EMAIL
+  );
   return verifyEmailToken;
 };
 
