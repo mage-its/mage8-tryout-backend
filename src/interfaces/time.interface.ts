@@ -2,9 +2,9 @@ import { Types } from 'mongoose';
 
 export interface TimeInterface {
   id: Types.ObjectId;
-  type: 'start' | 'end';
+  start: number;
+  end: number;
   round: number;
-  value: number;
   updatedAt: Date;
   createdAt: Date;
 }

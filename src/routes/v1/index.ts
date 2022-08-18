@@ -5,6 +5,7 @@ import authRoute from './auth.route';
 import docsRoute from './docs.route';
 import soalRoute from './soal.route';
 import teamRoute from './team.route';
+import timeRoute from './time.route';
 import userRoute from './user.route';
 
 const router = express.Router();
@@ -25,6 +26,10 @@ const defaultRoutes = [
   {
     path: '/soal',
     route: soalRoute,
+  },
+  {
+    path: '/time',
+    route: timeRoute,
   },
 ];
 
