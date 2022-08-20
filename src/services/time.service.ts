@@ -1,12 +1,14 @@
 import httpStatus from 'http-status';
 import { FilterQuery } from 'mongoose';
 
+import { redis } from '../config/redis';
 import TimeInterface from '../interfaces/time.interface';
 import { Time } from '../models';
 import { QueryOption } from '../models/plugins/paginate.plugin';
 import ApiError from '../utils/ApiError';
 
 export const createTime = async (timeBody: TimeInterface) => {
+  redis?.del('TIME');
   return Time.create(timeBody);
 };
 
@@ -32,6 +34,7 @@ export const updateTimeById = async (
   }
   Object.assign(time, updateBody);
   await time.save();
+  redis?.del('TIME');
   return time;
 };
 
@@ -41,6 +44,7 @@ export const deleteTimeById = async (timeId: string) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Time not found');
   }
   await time.remove();
+  redis?.del('TIME');
   return time;
 };
 

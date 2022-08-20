@@ -60,13 +60,21 @@ export const userAnswer = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Soal not found');
   }
 
-  const time = await Time.findOne({ round: soal.round });
+  const cachedTime = await redis?.get('TIME');
 
-  const curTime = moment().valueOf();
+  const time = cachedTime
+    ? JSON.parse(cachedTime)
+    : await Time.findOne({ round: soal.round });
 
   if (!time) {
     throw new ApiError(httpStatus.FORBIDDEN, 'Time not found');
   }
+
+  if (!cachedTime) {
+    await redis?.set('TIME', JSON.stringify(time), 'EX', 60 * 60);
+  }
+
+  const curTime = moment().valueOf();
 
   if (!(time.start < curTime && time.end > curTime)) {
     throw new ApiError(
