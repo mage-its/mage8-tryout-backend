@@ -19,7 +19,7 @@ export interface UserInterface {
   role?: keyof typeof Role;
   school: keyof typeof School;
   score: number;
-  answers?: { id: Types.ObjectId; answer: string }[];
+  answers?: { id: Types.ObjectId; answer: string; round: number }[];
   corrected?: boolean;
   updatedAt: Date;
   createdAt: Date;

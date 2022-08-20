@@ -1,7 +1,7 @@
 import { FilterQuery, Model, model, Schema } from 'mongoose';
 
 import TimeInterface from '../interfaces/time.interface';
-import { toJSON } from './plugins';
+import { paginate, toJSON } from './plugins';
 import { QueryOption } from './plugins/paginate.plugin';
 export interface TimeModel extends Model<TimeInterface, unknown> {
   paginate: (
@@ -35,6 +35,7 @@ const timeSchema = new Schema<TimeInterface, TimeModel>(
 
 // add plugin that converts mongoose to json
 timeSchema.plugin(toJSON as (schema: Schema) => void);
+timeSchema.plugin(paginate);
 
 export const Time = model<TimeInterface, TimeModel>('Time', timeSchema);
 

@@ -14,19 +14,11 @@ router
     validate(timeValidation.createTime),
     timeController.createTime
   )
-  .get(
-    auth('getTime'),
-    validate(timeValidation.getTimes),
-    timeController.getTimes
-  );
+  .get(validate(timeValidation.getTimes), timeController.getTimes);
 
 router
   .route('/:timeId')
-  .get(
-    auth('getTime'),
-    validate(timeValidation.getTime),
-    timeController.getTime
-  )
+  .get(validate(timeValidation.getTime), timeController.getTime)
   .patch(
     auth('manageTime'),
     validate(timeValidation.updateTime),

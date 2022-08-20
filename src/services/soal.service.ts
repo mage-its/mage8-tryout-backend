@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Chance } from 'chance';
 import httpStatus from 'http-status';
+import moment from 'moment';
 import { Document, FilterQuery, Types } from 'mongoose';
 
 import { redis } from '../config/redis';
 import SoalInterface from '../interfaces/soal.interface';
 import UserInterface from '../interfaces/user.interface';
-import { Soal } from '../models';
+import { Soal, Time } from '../models';
 import { QueryOption } from '../models/plugins/paginate.plugin';
 import ApiError from '../utils/ApiError';
 
@@ -51,9 +52,28 @@ export const userAnswer = async (
       _id: Types.ObjectId;
     }>,
   soalId: string,
-  answer: string
+  answer?: string
 ) => {
   const soal = await getSoalById(soalId);
+
+  if (!soal) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Soal not found');
+  }
+
+  const time = await Time.findOne({ round: soal.round });
+
+  const curTime = moment().valueOf();
+
+  if (!time) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Time not found');
+  }
+
+  if (!(time.start < curTime && time.end > curTime)) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      `Exam has ${curTime < time.start ? 'not started' : 'ended'}`
+    );
+  }
 
   if (soal?.type !== 'ESAI_PANJANG') {
     if (user.answers?.some(({ id }) => id.toString() === soal?.id.toString())) {
@@ -64,7 +84,7 @@ export const userAnswer = async (
         const { _id, ...returnedUser } = {
           ...(user.toObject() as Partial<typeof user>),
         };
-        delete returnedUser.score;
+        // delete returnedUser.score;
         delete returnedUser.password;
         returnedUser.id = _id;
         return returnedUser;
@@ -97,31 +117,33 @@ export const userAnswer = async (
       }
     }
 
-    if (answer === soal?.answer) {
-      switch (soal.difficulty) {
-        case 'MUDAH': {
-          user.score += 1;
-          break;
+    if (answer) {
+      if (answer === soal?.answer) {
+        switch (soal.difficulty) {
+          case 'MUDAH': {
+            user.score += 1;
+            break;
+          }
+          case 'SEDANG': {
+            user.score += 2;
+            break;
+          }
+          case 'SULIT': {
+            user.score += 3;
+            break;
+          }
+          case 'HOTS': {
+            user.score += 4;
+            break;
+          }
         }
-        case 'SEDANG': {
-          user.score += 2;
-          break;
-        }
-        case 'SULIT': {
-          user.score += 3;
-          break;
-        }
-        case 'HOTS': {
-          user.score += 4;
-          break;
-        }
+      } else {
+        user.score -= 1;
       }
-    } else {
-      user.score -= 1;
+      user.answers?.push({ id: soal?.id, answer: answer, round: soal.round });
     }
   }
 
-  user.answers?.push({ id: soal?.id, answer: answer });
   await user.save();
   const { _id, ...returnedUser } = {
     ...(user.toObject() as Partial<typeof user>),
