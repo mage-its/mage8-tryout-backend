@@ -23,7 +23,10 @@ export const loginUserWithUsernameAndPassword = async (
   if (user.role === 'user') {
     const redisUser = await redis?.get(user.id);
     if (redisUser && ip !== redisUser) {
-      throw new ApiError(httpStatus.FORBIDDEN, 'Max login reached');
+      throw new ApiError(
+        httpStatus.FORBIDDEN,
+        'Max login reached, please re-login'
+      );
     }
     await redis?.set(user.id, ip, 'EX', 60 * 60 * 3);
   }
