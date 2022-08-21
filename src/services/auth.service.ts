@@ -1,5 +1,6 @@
 import httpStatus from 'http-status';
 
+import { redis } from '../config/redis';
 import { tokenTypes } from '../config/tokens';
 import Token from '../models/token.model';
 import ApiError from '../utils/ApiError';
@@ -8,7 +9,8 @@ import userService from './user.service';
 
 export const loginUserWithUsernameAndPassword = async (
   username: string,
-  password: string
+  password: string,
+  ip: string
 ) => {
   const user = await userService.getUserByUsername(username);
   if (!user || !(await user.isPasswordMatch(password))) {
@@ -17,6 +19,15 @@ export const loginUserWithUsernameAndPassword = async (
       'Incorrect username or password'
     );
   }
+
+  if (user.role === 'user') {
+    const redisUser = await redis?.get(user.id);
+    if (redisUser && ip !== redisUser) {
+      throw new ApiError(httpStatus.FORBIDDEN, 'Max login reached');
+    }
+    await redis?.set(user.id, ip, 'EX', 60 * 60 * 3);
+  }
+
   const returnedUser = {
     ...(user.toObject() as Partial<typeof user>),
   };
@@ -48,6 +59,7 @@ export const logout = async (refreshToken: string) => {
   if (!refreshTokenDoc) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
   }
+  await redis?.del(refreshTokenDoc.user.toString());
   await refreshTokenDoc.remove();
 };
 

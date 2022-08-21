@@ -16,6 +16,7 @@ const createSoal = catchAsync(async (req, res) => {
 const userAnswer = catchAsync(async (req, res) => {
   const soal = await soalService.userAnswer(
     req.user as any,
+    req.ip,
     req.body.soalId,
     req.body.answer
   );

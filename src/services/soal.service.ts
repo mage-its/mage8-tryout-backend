@@ -51,9 +51,16 @@ export const userAnswer = async (
     Required<{
       _id: Types.ObjectId;
     }>,
+  ip: string,
   soalId: string,
   answer?: string
 ) => {
+  const redisUser = await redis?.get(user.id);
+  if (redisUser && ip !== redisUser) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Max login reached');
+  }
+  await redis?.set(user.id, ip, 'EX', 60 * 60 * 3);
+
   const soal = await getSoalById(soalId);
 
   if (!soal) {
