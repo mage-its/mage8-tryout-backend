@@ -2,6 +2,7 @@ import express from 'express';
 
 import soalController from '../../controllers/soal.controller';
 import auth from '../../middlewares/auth';
+import ensureOneIp from '../../middlewares/ensureOneIp';
 import validate from '../../middlewares/validate';
 import soalValidation from '../../validations/soal.validation';
 
@@ -23,7 +24,12 @@ router
 router
   .route('/peserta')
   .get(auth(), soalController.getSoalsPeserta)
-  .post(auth(), validate(soalValidation.userAnswer), soalController.userAnswer);
+  .post(
+    auth(),
+    validate(soalValidation.userAnswer),
+    ensureOneIp,
+    soalController.userAnswer
+  );
 
 router
   .route('/:soalId')
