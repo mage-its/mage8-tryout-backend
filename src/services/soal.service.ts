@@ -93,7 +93,7 @@ export const userAnswer = async (
         const { _id, ...returnedUser } = {
           ...(user.toObject() as Partial<typeof user>),
         };
-        // delete returnedUser.score;
+        delete returnedUser.score;
         delete returnedUser.password;
         returnedUser.id = _id;
         return returnedUser;

@@ -35,6 +35,7 @@ export const loginUserWithUsernameAndPassword = async (
     ...(user.toObject() as Partial<typeof user>),
   };
   delete returnedUser.score;
+  delete returnedUser.password;
   return returnedUser;
 };
 
