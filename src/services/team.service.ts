@@ -2,17 +2,23 @@ import httpStatus from 'http-status';
 import mongoose, { FilterQuery } from 'mongoose';
 
 import TeamInterface from '../interfaces/team.interface';
-import { Team } from '../models';
+import UserInterface from '../interfaces/user.interface';
+import { Team, User } from '../models';
 import { QueryOption } from '../models/plugins/paginate.plugin';
 import ApiError from '../utils/ApiError';
 
 export const createTeam = async (
-  teamBody: TeamInterface,
-  teamBodies: TeamInterface[]
+  teamBody: TeamInterface & { schoolType: 'SMA' | 'SMK' },
+  userBodies: UserInterface[]
 ) => {
-  const team = await Team.create(teamBody);
-  const teams = await Team.insertMany(
-    teamBodies.map((teamBody) => ({ ...teamBody, team: team.id }))
+  const { schoolType, ...newTeam } = teamBody;
+  const team = await Team.create(newTeam);
+  const teams = await User.insertMany(
+    userBodies.map((teamBody) => ({
+      ...teamBody,
+      team: team.id,
+      school: teamBody.school ?? schoolType,
+    }))
   );
   Object.assign(team, { membersId: teams.map((team) => team.id) });
   team.save();
