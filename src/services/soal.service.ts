@@ -6,7 +6,7 @@ import { Document, FilterQuery, Types } from 'mongoose';
 
 import { redis } from '../config/redis';
 import SoalInterface from '../interfaces/soal.interface';
-import UserInterface from '../interfaces/user.interface';
+import UserInterface, { Verdict } from '../interfaces/user.interface';
 import { Soal, Time } from '../models';
 import { QueryOption } from '../models/plugins/paginate.plugin';
 import ApiError from '../utils/ApiError';
@@ -53,7 +53,7 @@ export const userAnswer = async (
     }>,
   ip: string,
   soalId: string,
-  answer?: string
+  answerInput?: string
 ) => {
   const soal = await getSoalById(soalId);
 
@@ -89,7 +89,7 @@ export const userAnswer = async (
       const userAns = user.answers.find(
         (answer) => answer.id.toString() === soal?._id.toString()
       )?.answer;
-      if (answer === userAns) {
+      if (answerInput === userAns) {
         const { _id, ...returnedUser } = {
           ...(user.toObject() as Partial<typeof user>),
         };
@@ -126,8 +126,9 @@ export const userAnswer = async (
       }
     }
 
-    if (answer) {
-      if (answer === soal?.answer) {
+    if (answerInput) {
+      let verdict: keyof typeof Verdict;
+      if (answerInput === soal?.answer) {
         switch (soal.difficulty) {
           case 'MUDAH': {
             user.score += 1;
@@ -146,10 +147,56 @@ export const userAnswer = async (
             break;
           }
         }
+        verdict = 'CORRECT';
       } else {
         user.score -= 1;
+        verdict = 'INCORRECT';
       }
-      user.answers?.push({ id: soal?.id, answer: answer, round: soal.round });
+
+      if (!user.answers) {
+        user.answers = [
+          {
+            id: soal?.id,
+            answer: answerInput,
+            round: soal.round,
+            verdict,
+          },
+        ];
+      } else {
+        user.answers?.push({
+          id: soal?.id,
+          answer: answerInput,
+          round: soal.round,
+          verdict,
+        });
+      }
+    }
+  } else if (answerInput) {
+    // ESAI_PANJANG
+    if (user.answers) {
+      user.answers = user.answers.filter(
+        ({ id }) => id.toString() !== soal?.id.toString()
+      );
+      user.answers?.push({
+        id: soal?.id,
+        answer: answerInput,
+        round: soal.round,
+      });
+    } else {
+      user.answers = [
+        {
+          id: soal?.id,
+          answer: answerInput,
+          round: soal.round,
+        },
+      ];
+    }
+  } else {
+    // ESAI_PANJANG NO INPUT
+    if (user.answers) {
+      user.answers = user.answers.filter(
+        ({ id }) => id.toString() !== soal?.id.toString()
+      );
     }
   }
 

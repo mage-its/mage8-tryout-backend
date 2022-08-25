@@ -21,6 +21,14 @@ router
   );
 
 router
+  .route('/answer/:userId/:answerId')
+  .patch(
+    auth('manageUsers'),
+    validate(userValidation.updateUserAnswer),
+    userController.updateUserAnswer
+  );
+
+router
   .route('/:userId')
   .get(
     auth('getUsers'),

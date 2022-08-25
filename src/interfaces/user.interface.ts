@@ -10,6 +10,18 @@ enum School {
   SMK,
 }
 
+export enum Verdict {
+  CORRECT,
+  INCORRECT,
+}
+
+export type Answer = {
+  id: Types.ObjectId;
+  answer: string;
+  round: number;
+  verdict?: keyof typeof Verdict;
+};
+
 export interface UserInterface {
   id: string;
   _id: string;
@@ -19,7 +31,7 @@ export interface UserInterface {
   role?: keyof typeof Role;
   school: keyof typeof School;
   score: number;
-  answers?: { id: Types.ObjectId; answer: string; round: number }[];
+  answers?: Answer[];
   corrected?: boolean;
   updatedAt: Date;
   createdAt: Date;

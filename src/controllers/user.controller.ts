@@ -31,6 +31,15 @@ const updateUser = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const updateUserAnswer = catchAsync(async (req, res) => {
+  const user = await userService.updateUserAnswer(
+    req.params.userId,
+    req.params.answerId,
+    req.body
+  );
+  res.send(user);
+});
+
 const deleteUser = catchAsync(async (req, res) => {
   await userService.deleteUserById(req.params.userId);
   res.status(httpStatus.NO_CONTENT).send();
@@ -41,6 +50,7 @@ const userController = {
   getUsers,
   getUser,
   updateUser,
+  updateUserAnswer,
   deleteUser,
 };
 

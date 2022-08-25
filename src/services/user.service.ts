@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import { FilterQuery } from 'mongoose';
 
-import UserInterface from '../interfaces/user.interface';
+import UserInterface, { Answer } from '../interfaces/user.interface';
 import { User } from '../models';
 import { QueryOption } from '../models/plugins/paginate.plugin';
 import ApiError from '../utils/ApiError';
@@ -50,6 +50,29 @@ export const updateUserById = async (
   Object.assign(user, updateBody);
   await user.save();
   return user;
+};
+
+export const updateUserAnswer = async (
+  userId: string,
+  answerId: string,
+  updateBody: Partial<Answer>
+) => {
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const i = user.answers?.findIndex(
+    (answer) => answer.id.toString() === answerId
+  );
+
+  if (!i || user.answers === undefined) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Answer not found');
+  }
+
+  user.answers[i] = Object.assign(user.answers[i], updateBody);
+
+  return user.save();
 };
 
 export const deleteUserById = async (userId: string) => {

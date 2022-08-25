@@ -43,6 +43,20 @@ const updateUser = {
     .min(1),
 };
 
+const updateUserAnswer = {
+  params: Joi.object().keys({
+    userId: Joi.required().custom(objectId),
+    answerId: Joi.required().custom(objectId),
+  }),
+  body: Joi.object()
+    .keys({
+      answer: Joi.string(),
+      round: Joi.number(),
+      verdict: Joi.string().valid('CORRECT', 'INCORRECT'),
+    })
+    .min(1),
+};
+
 const deleteUser = {
   params: Joi.object().keys({
     userId: Joi.string().custom(objectId),
@@ -54,6 +68,7 @@ const userValidation = {
   getUsers,
   getUser,
   updateUser,
+  updateUserAnswer,
   deleteUser,
 };
 
