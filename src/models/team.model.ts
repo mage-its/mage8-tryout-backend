@@ -34,6 +34,10 @@ const teamSchema = new Schema<TeamInterface, TeamModel>(
       type: String,
       required: true,
     },
+    schoolType: {
+      type: String,
+      required: true,
+    },
     email: {
       type: String,
       required: true,

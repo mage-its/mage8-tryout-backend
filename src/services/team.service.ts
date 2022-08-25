@@ -8,11 +8,11 @@ import { QueryOption } from '../models/plugins/paginate.plugin';
 import ApiError from '../utils/ApiError';
 
 export const createTeam = async (
-  teamBody: TeamInterface & { schoolType: 'SMA' | 'SMK' },
+  teamBody: TeamInterface,
   userBodies: UserInterface[]
 ) => {
-  const { schoolType, ...newTeam } = teamBody;
-  const team = await Team.create(newTeam);
+  const { schoolType } = teamBody;
+  const team = await Team.create(teamBody);
   const teams = await User.insertMany(
     userBodies.map((teamBody) => ({
       ...teamBody,
@@ -94,6 +94,7 @@ export const updateTeamById = async (
   updateBody: Partial<TeamInterface>
 ) => {
   const team = await Team.findById(teamId);
+  const { schoolType } = updateBody;
   if (!team) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Team not found');
   }
@@ -102,6 +103,11 @@ export const updateTeamById = async (
     (await Team.isTeamnameTaken(updateBody.name, teamId))
   ) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Team name already taken');
+  }
+  if (schoolType) {
+    team.membersId.forEach((memberId) => {
+      User.findByIdAndUpdate(memberId, { school: schoolType }).exec();
+    });
   }
   Object.assign(team, updateBody);
   await team.save();
