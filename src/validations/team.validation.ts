@@ -46,6 +46,7 @@ const getTeams = {
     name: Joi.string(),
     school: Joi.string(),
     sortBy: Joi.string(),
+    schoolType: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),
@@ -61,6 +62,7 @@ const updateTeam = {
       phone: Joi.string(),
       school: Joi.string(),
       email: Joi.string(),
+      schoolType: Joi.string(),
     })
     .min(1),
 };
