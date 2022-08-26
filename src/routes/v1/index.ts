@@ -41,6 +41,8 @@ const devRoutes = [
   },
 ];
 
+router.get('/ping', (req, res) => res.send('PONG'));
+
 defaultRoutes.forEach((route) => {
   router.use(route.path, route.route);
 });
