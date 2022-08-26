@@ -15,6 +15,7 @@
     "format:check": "prettier -c .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "pm2": "pm2",
     "prepare": "husky install",
     "prettier": "prettier --check **/*.js",
     "prettier:fix": "prettier --write **/*.js",
