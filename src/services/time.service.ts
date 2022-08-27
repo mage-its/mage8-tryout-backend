@@ -8,7 +8,8 @@ import { QueryOption } from '../models/plugins/paginate.plugin';
 import ApiError from '../utils/ApiError';
 
 export const createTime = async (timeBody: TimeInterface) => {
-  redis?.del('TIME');
+  const keys = await redis?.keys('TIME*');
+  keys && redis?.del(keys);
   return Time.create(timeBody);
 };
 
@@ -34,7 +35,8 @@ export const updateTimeById = async (
   }
   Object.assign(time, updateBody);
   await time.save();
-  redis?.del('TIME');
+  const keys = await redis?.keys('TIME*');
+  keys && redis?.del(keys);
   return time;
 };
 
@@ -44,7 +46,8 @@ export const deleteTimeById = async (timeId: string) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Time not found');
   }
   await time.remove();
-  redis?.del('TIME');
+  const keys = await redis?.keys('TIME*');
+  keys && redis?.del(keys);
   return time;
 };
 

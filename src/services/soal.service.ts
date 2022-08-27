@@ -14,7 +14,8 @@ import ApiError from '../utils/ApiError';
 export const createSoal = async (soalBody: SoalInterface) => {
   const soal = await Soal.create(soalBody);
 
-  redis?.del('SOAL');
+  const keys = await redis?.keys('SOAL*');
+  keys && redis?.del(keys);
 
   return soal;
 };
@@ -41,7 +42,8 @@ export const updateSoalById = async (
   }
   Object.assign(soal, updateBody);
   await soal.save();
-  redis?.del('SOAL');
+  const keys = await redis?.keys('SOAL*');
+  keys && redis?.del(keys);
   return soal;
 };
 
@@ -61,7 +63,7 @@ export const userAnswer = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Soal not found');
   }
 
-  const cachedTime = await redis?.get('TIME');
+  const cachedTime = await redis?.get(`TIME-${soal.round}`);
 
   const time = cachedTime
     ? JSON.parse(cachedTime)
@@ -72,7 +74,7 @@ export const userAnswer = async (
   }
 
   if (!cachedTime) {
-    await redis?.set('TIME', JSON.stringify(time), 'EX', 60 * 60);
+    await redis?.set(`TIME-${time.round}`, JSON.stringify(time), 'EX', 60 * 60);
   }
 
   const curTime = moment().valueOf();
@@ -218,10 +220,22 @@ export const userGetSoal = async (user: UserInterface) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Peserta is not valid');
   }
 
+  const curTime = moment().valueOf();
+
+  const time = await Time.findOne({
+    start: { $lte: curTime },
+    end: { $gte: curTime },
+  });
+
+  if (!time) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'No exam at the moment');
+  }
+
   const aggregateQuery = [
     {
       $match: {
         school: user.school,
+        round: time.round,
       },
     },
     {
@@ -229,7 +243,7 @@ export const userGetSoal = async (user: UserInterface) => {
     },
   ];
 
-  const cachedSoal = await redis?.get('SOAL');
+  const cachedSoal = await redis?.get(`SOAL-${time.round}`);
 
   let soals: (SoalInterface & {
     members: SoalInterface[];
@@ -241,7 +255,7 @@ export const userGetSoal = async (user: UserInterface) => {
     soals = await Soal.aggregate<SoalInterface & { members: SoalInterface[] }>(
       aggregateQuery
     );
-    redis?.set('SOAL', JSON.stringify(soals), 'EX', 60 * 60);
+    redis?.set(`SOAL-${time.round}`, JSON.stringify(soals), 'EX', 60 * 60);
   }
 
   const chance = new Chance(user.id);
@@ -265,7 +279,8 @@ export const deleteSoalById = async (soalId: string) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Soal not found');
   }
   await soal.remove();
-  redis?.del('SOAL');
+  const keys = await redis?.keys('SOAL*');
+  keys && redis?.del(keys);
   return soal;
 };
 
