@@ -2,7 +2,7 @@
 import { Chance } from 'chance';
 import httpStatus from 'http-status';
 import moment from 'moment';
-import { Document, FilterQuery, Types } from 'mongoose';
+import mongoose, { Document, FilterQuery, Types } from 'mongoose';
 
 import { redis } from '../config/redis';
 import SoalInterface from '../interfaces/soal.interface';
@@ -223,8 +223,8 @@ export const userGetSoal = async (user: UserInterface) => {
   const curTime = moment().valueOf();
 
   const time = await Time.findOne({
-    start: { $lte: curTime },
-    end: { $gte: curTime },
+    start: mongoose.trusted({ $lte: curTime }),
+    end: mongoose.trusted({ $gte: curTime }),
   });
 
   if (!time) {
