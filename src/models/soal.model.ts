@@ -49,7 +49,7 @@ const soalSchema = new Schema<SoalInterface, SoalModel>(
     },
     type: {
       type: String,
-      enum: [TipeSoal.PILGAN, TipeSoal.ESAI_SINGKAT, TipeSoal.ESAI_SINGKAT],
+      enum: [TipeSoal.PILGAN, TipeSoal.ESAI_SINGKAT, TipeSoal.ESAI_PANJANG],
       required: true,
     },
   },
