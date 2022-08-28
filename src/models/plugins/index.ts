@@ -1,5 +1,2 @@
-import pag from './paginate.plugin';
-import toJ from './toJSON.plugin';
-
-export const toJSON = toJ;
-export const paginate = pag;
+export { paginate } from './paginate.plugin';
+export { toJSON } from './toJSON.plugin';

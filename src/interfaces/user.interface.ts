@@ -30,7 +30,9 @@ export interface UserInterface {
   team: Types.ObjectId;
   role?: keyof typeof Role;
   school: keyof typeof School;
-  score: number;
+  score: {
+    [key: string]: number;
+  };
   answers?: Answer[];
   corrected?: boolean;
   updatedAt: Date;

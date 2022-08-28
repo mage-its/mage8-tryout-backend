@@ -8,7 +8,7 @@ export type QueryOption = {
   page: string;
 };
 
-const paginate = (schema: Schema) => {
+export const paginate = (schema: Schema) => {
   schema.statics.paginate = async function (
     filter: FilterQuery<unknown>,
     options: QueryOption

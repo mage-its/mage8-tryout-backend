@@ -86,6 +86,8 @@ export const userAnswer = async (
     );
   }
 
+  const { round } = soal;
+
   if (soal?.type !== 'ESAI_PANJANG') {
     if (user.answers?.some(({ id }) => id.toString() === soal?.id.toString())) {
       const userAns = user.answers.find(
@@ -107,24 +109,24 @@ export const userAnswer = async (
       if (userAns === soal?.answer) {
         switch (soal?.difficulty) {
           case 'MUDAH': {
-            user.score -= 1;
+            user.score[round] -= 1;
             break;
           }
           case 'SEDANG': {
-            user.score -= 2;
+            user.score[round] -= 2;
             break;
           }
           case 'SULIT': {
-            user.score -= 3;
+            user.score[round] -= 3;
             break;
           }
           case 'HOTS': {
-            user.score -= 4;
+            user.score[round] -= 4;
             break;
           }
         }
       } else {
-        user.score += 1;
+        user.score[round] += 1;
       }
     }
 
@@ -133,25 +135,25 @@ export const userAnswer = async (
       if (answerInput === soal?.answer) {
         switch (soal.difficulty) {
           case 'MUDAH': {
-            user.score += 1;
+            user.score[round] += 1;
             break;
           }
           case 'SEDANG': {
-            user.score += 2;
+            user.score[round] += 2;
             break;
           }
           case 'SULIT': {
-            user.score += 3;
+            user.score[round] += 3;
             break;
           }
           case 'HOTS': {
-            user.score += 4;
+            user.score[round] += 4;
             break;
           }
         }
         verdict = 'CORRECT';
       } else {
-        user.score -= 1;
+        user.score[round] -= 1;
         verdict = 'INCORRECT';
       }
 

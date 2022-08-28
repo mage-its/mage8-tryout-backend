@@ -58,9 +58,12 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethods>(
       required: true,
     },
     score: {
-      type: Number,
+      type: Schema.Types.Mixed,
       required: true,
-      default: 0,
+      default: {
+        '1': 0,
+        '2': 0,
+      },
     },
     answers: {
       type: [Schema.Types.Mixed],

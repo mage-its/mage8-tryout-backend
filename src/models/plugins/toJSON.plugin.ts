@@ -11,7 +11,7 @@ const deleteAtPath = (obj: any, path: string[], index: number) => {
   deleteAtPath(obj[path[index]], path, index + 1);
 };
 
-const toJSON = (
+export const toJSON = (
   schema: Schema & {
     options: {
       toJSON: { transform: (doc: any, ret: any, options: any) => void };
