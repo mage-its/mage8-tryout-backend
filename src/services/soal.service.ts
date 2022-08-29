@@ -97,7 +97,8 @@ export const userAnswer = async (
         const { _id, ...returnedUser } = {
           ...(user.toObject() as Partial<typeof user>),
         };
-        delete returnedUser.score;
+        delete returnedUser.score_1;
+        delete returnedUser.score_2;
         delete returnedUser.password;
         returnedUser.id = _id;
         return returnedUser;
@@ -109,24 +110,44 @@ export const userAnswer = async (
       if (userAns === soal?.answer) {
         switch (soal?.difficulty) {
           case 'MUDAH': {
-            user.score[round] -= 1;
+            if (round === 1) {
+              user.score_1 -= 1;
+            } else {
+              user.score_2 -= 1;
+            }
             break;
           }
           case 'SEDANG': {
-            user.score[round] -= 2;
+            if (round === 1) {
+              user.score_1 -= 2;
+            } else {
+              user.score_2 -= 2;
+            }
             break;
           }
           case 'SULIT': {
-            user.score[round] -= 3;
+            if (round === 1) {
+              user.score_1 -= 3;
+            } else {
+              user.score_2 -= 3;
+            }
             break;
           }
           case 'HOTS': {
-            user.score[round] -= 4;
+            if (round === 1) {
+              user.score_1 -= 4;
+            } else {
+              user.score_2 -= 4;
+            }
             break;
           }
         }
       } else {
-        user.score[round] += 1;
+        if (round === 1) {
+          user.score_1 += 1;
+        } else {
+          user.score_2 += 1;
+        }
       }
     }
 
@@ -135,25 +156,45 @@ export const userAnswer = async (
       if (answerInput === soal?.answer) {
         switch (soal.difficulty) {
           case 'MUDAH': {
-            user.score[round] += 1;
+            if (round === 1) {
+              user.score_1 += 1;
+            } else {
+              user.score_2 += 1;
+            }
             break;
           }
           case 'SEDANG': {
-            user.score[round] += 2;
+            if (round === 1) {
+              user.score_1 += 2;
+            } else {
+              user.score_2 += 2;
+            }
             break;
           }
           case 'SULIT': {
-            user.score[round] += 3;
+            if (round === 1) {
+              user.score_1 += 3;
+            } else {
+              user.score_2 += 3;
+            }
             break;
           }
           case 'HOTS': {
-            user.score[round] += 4;
+            if (round === 1) {
+              user.score_1 += 4;
+            } else {
+              user.score_2 += 4;
+            }
             break;
           }
         }
         verdict = 'CORRECT';
       } else {
-        user.score[round] -= 1;
+        if (round === 1) {
+          user.score_1 -= 1;
+        } else {
+          user.score_2 -= 1;
+        }
         verdict = 'INCORRECT';
       }
 
@@ -208,7 +249,8 @@ export const userAnswer = async (
   const { _id, ...returnedUser } = {
     ...(user.toObject() as Partial<typeof user>),
   };
-  delete returnedUser.score;
+  delete returnedUser.score_1;
+  delete returnedUser.score_2;
   delete returnedUser.password;
   returnedUser.id = _id;
   return returnedUser;

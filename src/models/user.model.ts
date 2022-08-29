@@ -57,13 +57,15 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethods>(
       enum: ['SMA', 'SMK'],
       required: true,
     },
-    score: {
-      type: Schema.Types.Mixed,
+    score_1: {
+      type: Number,
       required: true,
-      default: {
-        '1': 0,
-        '2': 0,
-      },
+      default: 0,
+    },
+    score_2: {
+      type: Number,
+      required: true,
+      default: 0,
     },
     answers: {
       type: [Schema.Types.Mixed],

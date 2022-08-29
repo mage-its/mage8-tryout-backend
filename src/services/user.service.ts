@@ -47,9 +47,7 @@ export const updateUserById = async (
   ) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Username already taken');
   }
-  const newScore = updateBody.score ?? {};
-  Object.assign(newScore, user.score);
-  Object.assign(user, { ...updateBody, score: newScore });
+  Object.assign(user, updateBody);
   await user.save();
   return user;
 };

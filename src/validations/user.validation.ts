@@ -38,7 +38,8 @@ const updateUser = {
       school: Joi.string(),
       corrected: Joi.boolean(),
       role: Joi.string().valid('user', 'admin'),
-      score: Joi.object().pattern(Joi.string(), Joi.number()),
+      score_1: Joi.number(),
+      score_2: Joi.number(),
     })
     .min(1),
 };

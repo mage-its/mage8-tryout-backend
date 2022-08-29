@@ -35,7 +35,7 @@ export const getTeamByName = async (name: string) => {
     },
     {
       $lookup: {
-        from: Team.collection.collectionName,
+        from: User.collection.collectionName,
         localField: '_id',
         foreignField: 'team',
         as: 'members',
@@ -63,7 +63,7 @@ export const getTeamById = async (id: string) => {
     },
     {
       $lookup: {
-        from: Team.collection.collectionName,
+        from: User.collection.collectionName,
         localField: '_id',
         foreignField: 'team',
         as: 'members',
@@ -71,6 +71,55 @@ export const getTeamById = async (id: string) => {
     },
     {
       $unset: 'members.password',
+    },
+    {
+      $project: {
+        scoreTotal_1: {
+          $sum: '$members.score_1',
+        },
+        scoreTotal_2: {
+          $sum: '$members.score_2',
+        },
+        scoreTotal: {
+          $sum: ['$scoreTotal_1', '$scoreTotal_2'],
+        },
+        membersId: 1,
+        name: 1,
+        phone: 1,
+        school: 1,
+        schoolType: 1,
+        email: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        members: 1,
+        corrected: {
+          $size: {
+            $filter: {
+              input: '$members',
+              cond: { $eq: ['$$this.corrected', true] },
+            },
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        scoreTotal_1: 1,
+        scoreTotal_2: 1,
+        scoreTotal: {
+          $sum: ['$scoreTotal_1', '$scoreTotal_2'],
+        },
+        membersId: 1,
+        name: 1,
+        phone: 1,
+        school: 1,
+        schoolType: 1,
+        email: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        members: 1,
+        corrected: 1,
+      },
     },
   ];
 
@@ -85,8 +134,90 @@ export const queryTeams = async (
   filter: FilterQuery<unknown>,
   options: QueryOption
 ) => {
-  const teams = await Team.paginate(filter, options);
-  return teams;
+  const sortOpts: { [key: string]: 1 | -1 } = {};
+  options.sortBy?.split(',').forEach((sortOption) => {
+    const [key, order] = sortOption.split(':');
+    if (!key) return;
+    sortOpts[key] = order?.toLowerCase() === 'desc' ? -1 : 1;
+  });
+  const aggregateQuery = [
+    {
+      $match: filter,
+    },
+    {
+      $lookup: {
+        from: User.collection.collectionName,
+        localField: '_id',
+        foreignField: 'team',
+        as: 'members',
+      },
+    },
+    {
+      $unset: 'members.password',
+    },
+    {
+      $project: {
+        scoreTotal_1: {
+          $sum: '$members.score_1',
+        },
+        scoreTotal_2: {
+          $sum: '$members.score_2',
+        },
+        scoreTotal: {
+          $sum: ['$scoreTotal_1', '$scoreTotal_2'],
+        },
+        membersId: 1,
+        name: 1,
+        phone: 1,
+        school: 1,
+        schoolType: 1,
+        email: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        members: 1,
+        corrected: {
+          $size: {
+            $filter: {
+              input: '$members',
+              cond: { $eq: ['$$this.corrected', true] },
+            },
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        scoreTotal_1: 1,
+        scoreTotal_2: 1,
+        scoreTotal: {
+          $sum: ['$scoreTotal_1', '$scoreTotal_2'],
+        },
+        membersId: 1,
+        name: 1,
+        phone: 1,
+        school: 1,
+        schoolType: 1,
+        email: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        members: 1,
+        corrected: 1,
+      },
+    },
+    {
+      $sort:
+        Object.keys(sortOpts).length === 0
+          ? ({ createdAt: 1 } as { [key: string]: 1 | -1 })
+          : sortOpts,
+    },
+  ];
+  options.limit = options.limit ?? 10;
+  const aggr = Team.aggregate(aggregateQuery);
+  const result = await Team.aggregatePaginate(aggr, {
+    ...(options.page != null && { page: +options.page }),
+    ...(options.limit != null && { limit: +options.limit }),
+  });
+  return result;
 };
 
 export const updateTeamById = async (

@@ -1,4 +1,14 @@
-import mongoose, { FilterQuery, Model, model, Schema } from 'mongoose';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import mongoose, {
+  Aggregate,
+  AggregatePaginateResult,
+  FilterQuery,
+  Model,
+  model,
+  PaginateOptions,
+  Schema,
+} from 'mongoose';
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 import TeamInterface from '../interfaces/team.interface';
 import { paginate, toJSON } from './plugins';
@@ -11,6 +21,11 @@ export interface TeamModel extends Model<TeamInterface, unknown> {
     options: QueryOption
   ) => Promise<void>;
   toJSON: (schema: Schema) => void;
+  aggregatePaginate: <T>(
+    query?: Aggregate<T[]>,
+    options?: PaginateOptions,
+    callback?: (err: any, result: AggregatePaginateResult<T>) => void
+  ) => Promise<AggregatePaginateResult<T>>;
 }
 
 const teamSchema = new Schema<TeamInterface, TeamModel>(
@@ -42,11 +57,6 @@ const teamSchema = new Schema<TeamInterface, TeamModel>(
       type: String,
       required: true,
     },
-    score: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
   },
   {
     timestamps: true,
@@ -56,6 +66,7 @@ const teamSchema = new Schema<TeamInterface, TeamModel>(
 // add plugin that converts mongoose to json
 teamSchema.plugin(toJSON as (schema: Schema) => void);
 teamSchema.plugin(paginate);
+teamSchema.plugin(aggregatePaginate);
 
 teamSchema.statics.isTeamnameTaken = async function (
   name: string,
