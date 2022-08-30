@@ -37,6 +37,11 @@ export const loginUserWithUsernameAndPassword = async (
   delete returnedUser.score_1;
   delete returnedUser.score_2;
   delete returnedUser.password;
+  returnedUser.answers = returnedUser.answers?.map((answer) => {
+    const newAnswer = { ...answer };
+    delete newAnswer.verdict;
+    return newAnswer;
+  });
   return returnedUser;
 };
 
@@ -53,6 +58,11 @@ export const loginUserWithEmailAndPassword = async (
   };
   delete returnedUser.score_1;
   delete returnedUser.score_2;
+  returnedUser.answers = returnedUser.answers?.map((answer) => {
+    const newAnswer = { ...answer };
+    delete newAnswer.verdict;
+    return newAnswer;
+  });
   return returnedUser;
 };
 

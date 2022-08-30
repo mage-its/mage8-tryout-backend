@@ -101,6 +101,11 @@ export const userAnswer = async (
         delete returnedUser.score_2;
         delete returnedUser.password;
         returnedUser.id = _id;
+        returnedUser.answers = returnedUser.answers?.map((answer) => {
+          const newAnswer = { ...answer };
+          delete newAnswer.verdict;
+          return newAnswer;
+        });
         return returnedUser;
       }
       user.answers = user.answers.filter(
@@ -253,6 +258,11 @@ export const userAnswer = async (
   delete returnedUser.score_2;
   delete returnedUser.password;
   returnedUser.id = _id;
+  returnedUser.answers = returnedUser.answers?.map((answer) => {
+    const newAnswer = { ...answer };
+    delete newAnswer.verdict;
+    return newAnswer;
+  });
   return returnedUser;
 };
 

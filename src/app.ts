@@ -40,7 +40,7 @@ app.use(mongoSanitize());
 app.use(compression());
 
 // enable cors
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
 app.options('*', cors() as RequestHandler);
 
 app.use('/static', express.static(path.join(__dirname, '../public')));
