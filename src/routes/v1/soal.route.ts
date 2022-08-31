@@ -31,6 +31,13 @@ router
     soalController.userAnswer
   );
 
+router.post(
+  '/peserta/finish',
+  auth(),
+  ensureOneIp,
+  soalController.userFinished
+);
+
 router
   .route('/:soalId')
   .get(

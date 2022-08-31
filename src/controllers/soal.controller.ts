@@ -23,6 +23,11 @@ const userAnswer = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(soal);
 });
 
+const userFinished = catchAsync(async (req, res) => {
+  await soalService.userFinished(req.user as any);
+  res.status(httpStatus.CREATED).send({ message: 'OK' });
+});
+
 const getSoals = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['type', 'school', 'difficulty', 'round']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']) as QueryOption;
@@ -56,6 +61,7 @@ const deleteSoal = catchAsync(async (req, res) => {
 const soalController = {
   createSoal,
   userAnswer,
+  userFinished,
   getSoals,
   getSoal,
   getSoalsPeserta,

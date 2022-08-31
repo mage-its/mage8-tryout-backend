@@ -7,7 +7,7 @@ import mongoose, { Document, FilterQuery, Types } from 'mongoose';
 import { redis } from '../config/redis';
 import SoalInterface from '../interfaces/soal.interface';
 import UserInterface, { Verdict } from '../interfaces/user.interface';
-import { Soal, Time } from '../models';
+import { Soal, Time, UserMethods } from '../models';
 import { QueryOption } from '../models/plugins/paginate.plugin';
 import ApiError from '../utils/ApiError';
 
@@ -57,6 +57,10 @@ export const userAnswer = async (
   soalId: string,
   answerInput?: string
 ) => {
+  if (user.finished) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'User has finished the exam');
+  }
+
   const soal = await getSoalById(soalId);
 
   if (!soal) {
@@ -325,6 +329,30 @@ export const userGetSoal = async (user: UserInterface) => {
   );
 
   return returnSoals;
+};
+
+export const userFinished = async (
+  user:
+    | (mongoose.Document<unknown, any, UserInterface> &
+        UserInterface &
+        Required<{
+          _id: string;
+        }> &
+        UserMethods)
+    | null
+) => {
+  if (!user) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
+  }
+  if (
+    user.role !== 'user' ||
+    (user.school.toLowerCase() !== 'sma' && user.school.toLowerCase() !== 'smk')
+  ) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Peserta is not valid');
+  }
+
+  user.finished = true;
+  return user.save();
 };
 
 export const deleteSoalById = async (soalId: string) => {

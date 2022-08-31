@@ -34,6 +34,7 @@ export interface UserInterface {
   score_2: number;
   answers?: Answer[];
   corrected?: boolean;
+  finished?: boolean;
   updatedAt: Date;
   createdAt: Date;
 }

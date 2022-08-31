@@ -70,6 +70,11 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethods>(
     answers: {
       type: [Schema.Types.Mixed],
     },
+    finished: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
     role: {
       type: String,
       enum: roles,
