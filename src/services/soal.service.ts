@@ -278,6 +278,10 @@ export const userGetSoal = async (user: UserInterface) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Peserta is not valid');
   }
 
+  if (user.finished) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'User has finished the exam');
+  }
+
   const curTime = moment().valueOf();
 
   const time = await Time.findOne({
