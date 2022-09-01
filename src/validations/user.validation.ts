@@ -64,6 +64,12 @@ const deleteUser = {
   }),
 };
 
+const toggleCorrected = {
+  params: Joi.object().keys({
+    userId: Joi.required().custom(objectId),
+  }),
+};
+
 const userValidation = {
   createUser,
   getUsers,
@@ -71,6 +77,7 @@ const userValidation = {
   updateUser,
   updateUserAnswer,
   deleteUser,
+  toggleCorrected,
 };
 
 export default userValidation;

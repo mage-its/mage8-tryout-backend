@@ -52,6 +52,11 @@ const deleteUser = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const toggleCorrected = catchAsync(async (req, res) => {
+  await userService.toggleCorrected(req.params.userId);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
 const userController = {
   createUser,
   getUsers,
@@ -60,6 +65,7 @@ const userController = {
   updateUser,
   updateUserAnswer,
   deleteUser,
+  toggleCorrected,
 };
 
 export default userController;

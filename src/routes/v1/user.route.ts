@@ -48,6 +48,14 @@ router
     userController.deleteUser
   );
 
+router
+  .route('/toggle-corrected/:userId')
+  .post(
+    auth('manageUsers'),
+    validate(userValidation.toggleCorrected),
+    userController.toggleCorrected
+  );
+
 export default router;
 
 /**

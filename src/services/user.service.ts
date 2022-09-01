@@ -84,6 +84,15 @@ export const deleteUserById = async (userId: string) => {
   return user;
 };
 
+export const toggleCorrected = async (userId: string) => {
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  user.corrected = !user.corrected;
+  await user.save();
+};
+
 const userService = {
   createUser,
   queryUsers,
@@ -92,6 +101,7 @@ const userService = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  toggleCorrected,
 };
 
 export default userService;
