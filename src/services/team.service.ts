@@ -44,6 +44,55 @@ export const getTeamByName = async (name: string) => {
     {
       $unset: 'members.password',
     },
+    {
+      $project: {
+        scoreTotal_1: {
+          $sum: '$members.score_1',
+        },
+        scoreTotal_2: {
+          $sum: '$members.score_2',
+        },
+        scoreTotal: {
+          $sum: ['$scoreTotal_1', '$scoreTotal_2'],
+        },
+        membersId: 1,
+        name: 1,
+        phone: 1,
+        school: 1,
+        schoolType: 1,
+        email: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        members: 1,
+        corrected: {
+          $size: {
+            $filter: {
+              input: '$members',
+              cond: { $eq: ['$$this.corrected', true] },
+            },
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        scoreTotal_1: 1,
+        scoreTotal_2: 1,
+        scoreTotal: {
+          $sum: ['$scoreTotal_1', '$scoreTotal_2'],
+        },
+        membersId: 1,
+        name: 1,
+        phone: 1,
+        school: 1,
+        schoolType: 1,
+        email: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        members: 1,
+        corrected: 1,
+      },
+    },
   ];
 
   const team = await Team.aggregate<
