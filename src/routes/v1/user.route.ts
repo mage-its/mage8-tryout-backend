@@ -20,6 +20,8 @@ router
     userController.getUsers
   );
 
+router.route('/answers').get(auth(), userController.getUserAnswers);
+
 router
   .route('/answer/:userId/:answerId')
   .patch(

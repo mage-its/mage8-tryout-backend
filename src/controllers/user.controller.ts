@@ -1,5 +1,6 @@
 import httpStatus from 'http-status';
 
+import UserInterface from '../interfaces/user.interface';
 import { QueryOption } from '../models/plugins/paginate.plugin';
 import { userService } from '../services';
 import ApiError from '../utils/ApiError';
@@ -26,6 +27,12 @@ const getUser = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const getUserAnswers = catchAsync(async (req, res) => {
+  const user = await userService.getUserById((req.user as UserInterface).id);
+  const answers = user?.answers;
+  res.send({ answers });
+});
+
 const updateUser = catchAsync(async (req, res) => {
   const user = await userService.updateUserById(req.params.userId, req.body);
   res.send(user);
@@ -49,6 +56,7 @@ const userController = {
   createUser,
   getUsers,
   getUser,
+  getUserAnswers,
   updateUser,
   updateUserAnswer,
   deleteUser,
