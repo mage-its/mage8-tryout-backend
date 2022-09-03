@@ -305,7 +305,7 @@ export const userGetSoal = async (user: UserInterface) => {
     },
   ];
 
-  const cachedSoal = await redis?.get(`SOAL-${time.round}`);
+  const cachedSoal = await redis?.get(`SOAL-${user.school}-${time.round}`);
 
   let soals: (SoalInterface & {
     members: SoalInterface[];
@@ -317,7 +317,12 @@ export const userGetSoal = async (user: UserInterface) => {
     soals = await Soal.aggregate<SoalInterface & { members: SoalInterface[] }>(
       aggregateQuery
     );
-    redis?.set(`SOAL-${time.round}`, JSON.stringify(soals), 'EX', 60 * 60);
+    redis?.set(
+      `SOAL-${user.school}-${time.round}`,
+      JSON.stringify(soals),
+      'EX',
+      60 * 60
+    );
   }
 
   const chance = new Chance(user.id);
