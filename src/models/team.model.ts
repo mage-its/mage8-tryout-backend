@@ -57,6 +57,11 @@ const teamSchema = new Schema<TeamInterface, TeamModel>(
       type: String,
       required: true,
     },
+    pass: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
   },
   {
     timestamps: true,

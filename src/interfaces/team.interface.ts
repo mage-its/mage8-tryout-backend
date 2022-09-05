@@ -10,6 +10,7 @@ export interface TeamInterface {
   schoolType: School;
   email: string;
   score: number;
+  pass: boolean;
   updatedAt: Date;
   createdAt: Date;
 }

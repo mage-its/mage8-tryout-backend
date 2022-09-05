@@ -63,6 +63,7 @@ const updateTeam = {
       school: Joi.string(),
       email: Joi.string(),
       schoolType: Joi.string(),
+      pass: Joi.boolean(),
     })
     .min(1),
 };

@@ -6,6 +6,7 @@ import mongoose, { Document, FilterQuery, Types } from 'mongoose';
 
 import { redis } from '../config/redis';
 import SoalInterface from '../interfaces/soal.interface';
+import TeamInterface from '../interfaces/team.interface';
 import UserInterface, { Verdict } from '../interfaces/user.interface';
 import { Soal, Time, UserMethods } from '../models';
 import { QueryOption } from '../models/plugins/paginate.plugin';
@@ -65,6 +66,15 @@ export const userAnswer = async (
 
   if (!soal) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Soal not found');
+  }
+
+  if (soal.round > 1) {
+    const populatedUser = (await user.populate('team')) as typeof user & {
+      team: TeamInterface;
+    };
+    if (!populatedUser?.team?.pass) {
+      throw new ApiError(httpStatus.FORBIDDEN, 'User cannot access round 2');
+    }
   }
 
   const cachedTime = await redis?.get(`TIME-${soal.round}`);
@@ -270,7 +280,13 @@ export const userAnswer = async (
   return returnedUser;
 };
 
-export const userGetSoal = async (user: UserInterface) => {
+export const userGetSoal = async (
+  user: Document<unknown, any, UserInterface> &
+    UserInterface &
+    Required<{
+      _id: Types.ObjectId;
+    }>
+) => {
   if (
     user.role !== 'user' ||
     (user.school.toLowerCase() !== 'sma' && user.school.toLowerCase() !== 'smk')
@@ -291,6 +307,15 @@ export const userGetSoal = async (user: UserInterface) => {
 
   if (!time) {
     throw new ApiError(httpStatus.FORBIDDEN, 'No exam at the moment');
+  }
+
+  if (time.round > 1) {
+    const populatedUser = (await user.populate('team')) as typeof user & {
+      team: TeamInterface;
+    };
+    if (!populatedUser?.team?.pass) {
+      throw new ApiError(httpStatus.FORBIDDEN, 'User cannot access round 2');
+    }
   }
 
   const aggregateQuery = [

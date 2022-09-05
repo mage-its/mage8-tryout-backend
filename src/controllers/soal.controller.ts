@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 
-import UserInterface from '../interfaces/user.interface';
 import { QueryOption } from '../models/plugins/paginate.plugin';
 import { soalService } from '../services';
 import ApiError from '../utils/ApiError';
@@ -44,7 +43,7 @@ const getSoal = catchAsync(async (req, res) => {
 });
 
 const getSoalsPeserta = catchAsync(async (req, res) => {
-  const soals = await soalService.userGetSoal(req.user as UserInterface);
+  const soals = await soalService.userGetSoal(req.user as any);
   res.send(soals);
 });
 
