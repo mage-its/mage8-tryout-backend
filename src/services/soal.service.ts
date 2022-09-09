@@ -126,7 +126,7 @@ export const userAnswer = async (
         ({ id }) => id.toString() !== soal?.id.toString()
       );
 
-      if (userAns === soal?.answer) {
+      if (userAns?.trim().toUpperCase() === soal?.answer.trim().toUpperCase()) {
         switch (soal?.difficulty) {
           case 'MUDAH': {
             if (round === 1) {
@@ -172,7 +172,9 @@ export const userAnswer = async (
 
     if (answerInput) {
       let verdict: keyof typeof Verdict;
-      if (answerInput === soal?.answer) {
+      if (
+        answerInput.trim().toUpperCase() === soal?.answer.trim().toUpperCase()
+      ) {
         switch (soal.difficulty) {
           case 'MUDAH': {
             if (round === 1) {

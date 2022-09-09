@@ -17,7 +17,7 @@ const createSoal = {
 const userAnswer = {
   body: Joi.object().keys({
     soalId: Joi.string().required(),
-    answer: Joi.string(),
+    answer: Joi.string().min(1),
   }),
 };
 
