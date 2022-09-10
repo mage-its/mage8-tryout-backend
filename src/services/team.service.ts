@@ -141,6 +141,7 @@ export const getTeamById = async (id: string) => {
         createdAt: 1,
         updatedAt: 1,
         members: 1,
+        pass: 1,
         corrected: {
           $size: {
             $filter: {
@@ -167,6 +168,7 @@ export const getTeamById = async (id: string) => {
         createdAt: 1,
         updatedAt: 1,
         members: 1,
+        pass: 1,
         corrected: 1,
       },
     },
@@ -224,6 +226,7 @@ export const queryTeams = async (
         createdAt: 1,
         updatedAt: 1,
         members: 1,
+        pass: 1,
         corrected: {
           $size: {
             $filter: {
@@ -250,6 +253,7 @@ export const queryTeams = async (
         createdAt: 1,
         updatedAt: 1,
         members: 1,
+        pass: 1,
         corrected: 1,
       },
     },
