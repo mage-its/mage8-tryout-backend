@@ -31,6 +31,7 @@ const envVarsSchema = Joi.object()
     EMAIL_FROM: Joi.string().description(
       'the from field in the emails sent by the app'
     ),
+    ENSURE_ONE_IP: Joi.boolean(),
   })
   .unknown();
 
@@ -45,7 +46,7 @@ if (error) {
 const config = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
-  ensureOneIp: envVars.ENSURE_ONE_IP === 'true',
+  ensureOneIp: envVars.ENSURE_ONE_IP,
   mongoose: {
     url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
     options: {},
