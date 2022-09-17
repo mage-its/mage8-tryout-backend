@@ -5,7 +5,7 @@ import moment from 'moment';
 import mongoose, { Document, FilterQuery, Types } from 'mongoose';
 
 import { redis } from '../config/redis';
-import SoalInterface from '../interfaces/soal.interface';
+import SoalInterface, { TipeSoal } from '../interfaces/soal.interface';
 import TeamInterface from '../interfaces/team.interface';
 import UserInterface, { Verdict } from '../interfaces/user.interface';
 import { Soal, Time, UserMethods } from '../models';
@@ -130,38 +130,46 @@ export const userAnswer = async (
         userAns?.replaceAll(' ', '').trim().toUpperCase() ===
         soal?.answer.replaceAll(' ', '').trim().toUpperCase()
       ) {
-        switch (soal?.difficulty) {
-          case 'MUDAH': {
-            if (round === 1) {
-              user.score_1 -= 1;
-            } else {
-              user.score_2 -= 1;
-            }
-            break;
+        if (soal.type === TipeSoal.ESAI_SINGKAT) {
+          if (round === 1) {
+            user.score_1 -= 5;
+          } else {
+            user.score_2 -= 5;
           }
-          case 'SEDANG': {
-            if (round === 1) {
-              user.score_1 -= 2;
-            } else {
-              user.score_2 -= 2;
+        } else {
+          switch (soal?.difficulty) {
+            case 'MUDAH': {
+              if (round === 1) {
+                user.score_1 -= 1;
+              } else {
+                user.score_2 -= 1;
+              }
+              break;
             }
-            break;
-          }
-          case 'SULIT': {
-            if (round === 1) {
-              user.score_1 -= 3;
-            } else {
-              user.score_2 -= 3;
+            case 'SEDANG': {
+              if (round === 1) {
+                user.score_1 -= 2;
+              } else {
+                user.score_2 -= 2;
+              }
+              break;
             }
-            break;
-          }
-          case 'HOTS': {
-            if (round === 1) {
-              user.score_1 -= 4;
-            } else {
-              user.score_2 -= 4;
+            case 'SULIT': {
+              if (round === 1) {
+                user.score_1 -= 3;
+              } else {
+                user.score_2 -= 3;
+              }
+              break;
             }
-            break;
+            case 'HOTS': {
+              if (round === 1) {
+                user.score_1 -= 4;
+              } else {
+                user.score_2 -= 4;
+              }
+              break;
+            }
           }
         }
       } else {
@@ -179,38 +187,46 @@ export const userAnswer = async (
         answerInput.replaceAll(' ', '').trim().toUpperCase() ===
         soal?.answer.replaceAll(' ', '').trim().toUpperCase()
       ) {
-        switch (soal.difficulty) {
-          case 'MUDAH': {
-            if (round === 1) {
-              user.score_1 += 1;
-            } else {
-              user.score_2 += 1;
-            }
-            break;
+        if (soal.type === TipeSoal.ESAI_SINGKAT) {
+          if (round === 1) {
+            user.score_1 += 5;
+          } else {
+            user.score_2 += 5;
           }
-          case 'SEDANG': {
-            if (round === 1) {
-              user.score_1 += 2;
-            } else {
-              user.score_2 += 2;
+        } else {
+          switch (soal.difficulty) {
+            case 'MUDAH': {
+              if (round === 1) {
+                user.score_1 += 1;
+              } else {
+                user.score_2 += 1;
+              }
+              break;
             }
-            break;
-          }
-          case 'SULIT': {
-            if (round === 1) {
-              user.score_1 += 3;
-            } else {
-              user.score_2 += 3;
+            case 'SEDANG': {
+              if (round === 1) {
+                user.score_1 += 2;
+              } else {
+                user.score_2 += 2;
+              }
+              break;
             }
-            break;
-          }
-          case 'HOTS': {
-            if (round === 1) {
-              user.score_1 += 4;
-            } else {
-              user.score_2 += 4;
+            case 'SULIT': {
+              if (round === 1) {
+                user.score_1 += 3;
+              } else {
+                user.score_2 += 3;
+              }
+              break;
             }
-            break;
+            case 'HOTS': {
+              if (round === 1) {
+                user.score_1 += 4;
+              } else {
+                user.score_2 += 4;
+              }
+              break;
+            }
           }
         }
         verdict = 'CORRECT';
