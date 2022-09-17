@@ -126,7 +126,10 @@ export const userAnswer = async (
         ({ id }) => id.toString() !== soal?.id.toString()
       );
 
-      if (userAns?.trim().toUpperCase() === soal?.answer.trim().toUpperCase()) {
+      if (
+        userAns?.replaceAll(' ', '').trim().toUpperCase() ===
+        soal?.answer.replaceAll(' ', '').trim().toUpperCase()
+      ) {
         switch (soal?.difficulty) {
           case 'MUDAH': {
             if (round === 1) {
@@ -173,7 +176,8 @@ export const userAnswer = async (
     if (answerInput) {
       let verdict: keyof typeof Verdict;
       if (
-        answerInput.trim().toUpperCase() === soal?.answer.trim().toUpperCase()
+        answerInput.replaceAll(' ', '').trim().toUpperCase() ===
+        soal?.answer.replaceAll(' ', '').trim().toUpperCase()
       ) {
         switch (soal.difficulty) {
           case 'MUDAH': {
