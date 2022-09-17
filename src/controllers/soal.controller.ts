@@ -17,7 +17,7 @@ const userAnswer = catchAsync(async (req, res) => {
     req.user as any,
     req.ip,
     req.body.soalId,
-    (req.body.answer as string).trim().toUpperCase()
+    (req.body.answer as string)?.trim()
   );
   res.status(httpStatus.CREATED).send(soal);
 });
