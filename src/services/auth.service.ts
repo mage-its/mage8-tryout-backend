@@ -1,5 +1,6 @@
 import httpStatus from 'http-status';
 
+import config from '../config/config';
 import { redis } from '../config/redis';
 import { tokenTypes } from '../config/tokens';
 import Token from '../models/token.model';
@@ -20,7 +21,7 @@ export const loginUserWithUsernameAndPassword = async (
     );
   }
 
-  if (user.role === 'user') {
+  if (config.ensureOneIp && user.role === 'user') {
     const redisUser = await redis?.get(user.id);
     if (redisUser && ip !== redisUser) {
       throw new ApiError(
