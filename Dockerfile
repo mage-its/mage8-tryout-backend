@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD [ "yarn", "start:ts" ]
+CMD [ "yarn", "start:node" ]
