@@ -93,10 +93,10 @@ const userAnswer = async (user, ip, soalId, answerInput) => {
                 soal?.answer.replaceAll(' ', '').trim().toUpperCase()) {
                 if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT) {
                     if (round === 1) {
-                        user.score_1 -= 5;
+                        user.score_1 -= 3;
                     }
                     else {
-                        user.score_2 -= 5;
+                        user.score_2 -= 3;
                     }
                 }
                 else {
@@ -142,10 +142,10 @@ const userAnswer = async (user, ip, soalId, answerInput) => {
             }
             else {
                 if (round === 1) {
-                    user.score_1 += 1;
+                    user.score_1 += 0;
                 }
                 else {
-                    user.score_2 += 1;
+                    user.score_2 += 0;
                 }
             }
         }
@@ -155,10 +155,10 @@ const userAnswer = async (user, ip, soalId, answerInput) => {
                 soal?.answer.replaceAll(' ', '').trim().toUpperCase()) {
                 if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT) {
                     if (round === 1) {
-                        user.score_1 += 5;
+                        user.score_1 += 3;
                     }
                     else {
-                        user.score_2 += 5;
+                        user.score_2 += 3;
                     }
                 }
                 else {
@@ -205,10 +205,10 @@ const userAnswer = async (user, ip, soalId, answerInput) => {
             }
             else {
                 if (round === 1) {
-                    user.score_1 -= 1;
+                    user.score_1 -= 0;
                 }
                 else {
-                    user.score_2 -= 1;
+                    user.score_2 -= 0;
                 }
                 verdict = 'INCORRECT';
             }
