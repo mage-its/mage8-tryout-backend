@@ -132,9 +132,9 @@ export const userAnswer = async (
       ) {
         if (soal.type === TipeSoal.ESAI_SINGKAT) {
           if (round === 1) {
-            user.score_1 -= 5;
+            user.score_1 -= 3;
           } else {
-            user.score_2 -= 5;
+            user.score_2 -= 3;
           }
         } else {
           switch (soal?.difficulty) {
@@ -174,9 +174,9 @@ export const userAnswer = async (
         }
       } else {
         if (round === 1) {
-          user.score_1 += 1;
+          user.score_1 += 0;
         } else {
-          user.score_2 += 1;
+          user.score_2 += 0;
         }
       }
     }
@@ -189,9 +189,9 @@ export const userAnswer = async (
       ) {
         if (soal.type === TipeSoal.ESAI_SINGKAT) {
           if (round === 1) {
-            user.score_1 += 5;
+            user.score_1 += 3;
           } else {
-            user.score_2 += 5;
+            user.score_2 += 3;
           }
         } else {
           switch (soal.difficulty) {
@@ -232,9 +232,9 @@ export const userAnswer = async (
         verdict = 'CORRECT';
       } else {
         if (round === 1) {
-          user.score_1 -= 1;
+          user.score_1 -= 0;
         } else {
-          user.score_2 -= 1;
+          user.score_2 -= 0;
         }
         verdict = 'INCORRECT';
       }
