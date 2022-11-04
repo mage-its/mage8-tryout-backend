@@ -91,12 +91,28 @@ const userAnswer = async (user, ip, soalId, answerInput) => {
             user.answers = user.answers.filter(({ id }) => id.toString() !== soal?.id.toString());
             if (userAns?.replaceAll(' ', '').trim().toUpperCase() ===
                 soal?.answer.replaceAll(' ', '').trim().toUpperCase()) {
-                if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT) {
+                if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === "SULIT") {
                     if (round === 1) {
-                        user.score_1 -= 5;
+                        user.score_1 -= 3;
                     }
                     else {
                         user.score_2 -= 5;
+                    }
+                }
+                else if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === "SEDANG") {
+                    if (round === 1) {
+                        user.score_1 -= 3;
+                    }
+                    else {
+                        user.score_2 -= 3;
+                    }
+                }
+                else if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === "MUDAH") {
+                    if (round === 1) {
+                        user.score_1 -= 3;
+                    }
+                    else {
+                        user.score_2 -= 3;
                     }
                 }
                 else {
@@ -142,10 +158,85 @@ const userAnswer = async (user, ip, soalId, answerInput) => {
             }
             else {
                 if (round === 1) {
-                    user.score_1 += 1;
+                    user.score_1 += 0;
                 }
                 else {
-                    user.score_2 += 1;
+                    user.score_2 += 0;
+                }
+            }
+            if (userAns?.replaceAll(' ', '').trim().toUpperCase() !==
+                soal?.answer.replaceAll(' ', '').trim().toUpperCase()) {
+                if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === "SULIT") {
+                    if (round === 1) {
+                        user.score_1 -= 3;
+                    }
+                    else {
+                        user.score_2 += 2;
+                    }
+                }
+                else if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === "SEDANG") {
+                    if (round === 1) {
+                        user.score_1 -= 3;
+                    }
+                    else {
+                        user.score_2 -= 3;
+                    }
+                }
+                else if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === "MUDAH") {
+                    if (round === 1) {
+                        user.score_1 -= 3;
+                    }
+                    else {
+                        user.score_2 += 1;
+                    }
+                }
+                else {
+                    switch (soal?.difficulty) {
+                        case 'MUDAH': {
+                            if (round === 1) {
+                                user.score_1 -= 1;
+                            }
+                            else {
+                                user.score_2 -= 1;
+                            }
+                            break;
+                        }
+                        case 'SEDANG': {
+                            if (round === 1) {
+                                user.score_1 -= 2;
+                            }
+                            else {
+                                user.score_2 -= 2;
+                            }
+                            break;
+                        }
+                        case 'SULIT': {
+                            if (round === 1) {
+                                user.score_1 -= 3;
+                            }
+                            else {
+                                user.score_2 -= 3;
+                            }
+                            break;
+                        }
+                        case 'HOTS': {
+                            if (round === 1) {
+                                user.score_1 -= 4;
+                            }
+                            else {
+                                user.score_2 -= 4;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if (round === 1) {
+                    user.score_1 += 0;
+                }
+                else {
+                    user.score_2 += 0;
                 }
             }
         }
@@ -153,7 +244,23 @@ const userAnswer = async (user, ip, soalId, answerInput) => {
             let verdict;
             if (answerInput.replaceAll(' ', '').trim().toUpperCase() ===
                 soal?.answer.replaceAll(' ', '').trim().toUpperCase()) {
-                if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT) {
+                if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === 'MUDAH') {
+                    if (round === 1) {
+                        user.score_1 += 3;
+                    }
+                    else {
+                        user.score_2 += 3;
+                    }
+                }
+                else if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === 'SEDANG') {
+                    if (round === 1) {
+                        user.score_1 += 2;
+                    }
+                    else {
+                        user.score_2 += 2;
+                    }
+                }
+                else if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === 'SULIT') {
                     if (round === 1) {
                         user.score_1 += 5;
                     }
@@ -204,11 +311,37 @@ const userAnswer = async (user, ip, soalId, answerInput) => {
                 verdict = 'CORRECT';
             }
             else {
-                if (round === 1) {
-                    user.score_1 -= 1;
+                if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === 'MUDAH') {
+                    if (round === 1) {
+                        user.score_1 -= 3;
+                    }
+                    else {
+                        user.score_2 -= 1;
+                    }
+                }
+                else if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === 'SEDANG') {
+                    if (round === 1) {
+                        user.score_1 -= 2;
+                    }
+                    else {
+                        user.score_2 -= 2;
+                    }
+                }
+                else if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === 'SULIT') {
+                    if (round === 1) {
+                        user.score_1 -= 2;
+                    }
+                    else {
+                        user.score_2 -= 2;
+                    }
                 }
                 else {
-                    user.score_2 -= 1;
+                    if (round === 1) {
+                        user.score_1 -= 0;
+                    }
+                    else {
+                        user.score_2 -= 0;
+                    }
                 }
                 verdict = 'INCORRECT';
             }
