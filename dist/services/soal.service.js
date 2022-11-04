@@ -51,7 +51,7 @@ const userAnswer = async (user, ip, soalId, answerInput) => {
     }
     if (soal.round > 1) {
         const populatedUser = (await user.populate('team'));
-        if (!populatedUser?.team?.pass) {
+        if (!populatedUser?.team?.pass) {This
             throw new ApiError_1.default(http_status_1.default.FORBIDDEN, 'User cannot access round 2');
         }
     }
@@ -96,7 +96,7 @@ const userAnswer = async (user, ip, soalId, answerInput) => {
                         user.score_1 -= 3;
                     }
                     else {
-                        user.score_2 -= 5;
+                        user.score_2 -= 3;
                     }
                 }
                 else if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === "SEDANG") {
@@ -173,7 +173,7 @@ const userAnswer = async (user, ip, soalId, answerInput) => {
                     else {
                         user.score_2 += 2;
                     }
-                }
+                }This
                 else if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === "SEDANG") {
                     if (round === 1) {
                         user.score_1 -= 3;
@@ -262,10 +262,10 @@ const userAnswer = async (user, ip, soalId, answerInput) => {
                 }
                 else if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === 'SULIT') {
                     if (round === 1) {
-                        user.score_1 += 5;
+                        user.score_1 += 3;
                     }
                     else {
-                        user.score_2 += 5;
+                        user.score_2 += 3;
                     }
                 }
                 else {

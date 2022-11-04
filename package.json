@@ -22,6 +22,8 @@
     "purge:redis": "ts-node ./src/scripts/clearRedis.ts",
     "purge:token": "ts-node ./src/scripts/clearTokens.ts",
     "purge:user": "ts-node ./src/scripts/clearUsers.ts",
+    "reset:finished": "ts-node ./src/scripts/resetFinished.ts",
+    "set:pass": "ts-node ./src/scripts/setPassAll.ts",
     "start": "pm2 start ecosystem.config.json --no-daemon",
     "start:node": "node ./dist/index.js",
     "start:ts": "ts-node ./src/index.ts",
