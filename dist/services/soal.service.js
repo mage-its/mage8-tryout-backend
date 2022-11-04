@@ -173,7 +173,7 @@ const userAnswer = async (user, ip, soalId, answerInput) => {
                     else {
                         user.score_2 += 2;
                     }
-                }This
+                }
                 else if (soal.type === soal_interface_1.TipeSoal.ESAI_SINGKAT && soal.difficulty === "SEDANG") {
                     if (round === 1) {
                         user.score_1 -= 3;
